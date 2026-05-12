@@ -1,32 +1,103 @@
+```html id="a8f4k2"
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Direct Automotive</title>
 
-<style> 
-body
-{
- background-image: url("file:///c:/Users/Rudra/Downloads/pexels-justin-joseph-2753649-34706981.jpg");
- background-size:cover;
- background-repeat: 
- background-position: center;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Direct Automotive</title>
+
+<!-- Font Awesome -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
-header {
-  color: rgb(212,67,67);
-  font-size: 30px;
-  padding: 20px;
-  display: inline-block;
+
+body{
+    background-image: url("file:///c:/Users/Rudra/Downloads/pexels-justin-joseph-2753649-34706981.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height:100vh;
+    font-family: Arial, sans-serif;
 }
+
+/* HEADER */
+.navbar{
+    width:100%;
+    background: rgba(0,0,0,0.7);
+    padding:15px 40px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+/* LOGO */
+.logo{
+    color:white;
+    font-size:30px;
+    font-weight:bold;
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.logo i{
+    color:red;
+    font-size:35px;
+}
+
+/* MENU */
+.menu{
+    list-style:none;
+    display:flex;
+    gap:30px;
+}
+
+.menu li a{
+    text-decoration:none;
+    color:white;
+    font-size:20px;
+    transition:0.3s;
+}
+
+.menu li a:hover{
+    color:red;
+}
+
 </style>
 
 </head>
+
 <body>
-  <header>Home</header>
-   
-    <header>contact</header>
-    <header>About us</header>
- <header>Pre-owned</header>
+
+<!-- HEADER -->
+<header class="navbar">
+
+    <!-- LOGO -->
+    <div class="logo">
+        <i class="fa-solid fa-car-side"></i>
+        Direct Automotive
+    </div>
+
+    <!-- MENU -->
+    <ul class="menu">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Pre-Owned</a></li>
+    </ul>
+
+</header>
+
 </body>
+</html>
+```
