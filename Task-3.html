@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Direct Automotive</title>
+
+<!-- Font Awesome -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family: Arial, sans-serif;
+    overflow-x:hidden;
+}
+
+/* PARALLAX BACKGROUND */
+.hero{
+    background-image: url("file:///c:/Users/Rudra/Downloads/pexels-justin-joseph-2753649-34706981.jpg");
+
+    height:100vh;
+
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    position:relative;
+}
+
+/* DARK OVERLAY */
+.hero::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+}
+
+/* HEADER */
+.navbar{
+    width:100%;
+    background: rgba(0,0,0,0.7);
+    padding:15px 40px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    position:fixed;
+    top:0;
+    z-index:1000;
+}
+
+/* LOGO */
+.logo{
+    color:white;
+    font-size:30px;
+    font-weight:bold;
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    position:relative;
+    z-index:2;
+}
+
+.logo i{
+    color:red;
+    font-size:35px;
+}
+
+/* MENU */
+.menu{
+    list-style:none;
+    display:flex;
+    gap:30px;
+
+    position:relative;
+    z-index:2;
+}
+
+.menu li a{
+    text-decoration:none;
+    color:white;
+    font-size:20px;
+    transition:0.3s;
+}
+
+.menu li a:hover{
+    color:red;
+}
+
+/* HERO TEXT */
+.content{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
+    color:white;
+    z-index:2;
+}
+
+.content h1{
+    font-size:70px;
+    margin-bottom:20px;
+}
+
+.content p{
+    font-size:25px;
+    letter-spacing:3px;
+}
+
+/* SECOND SECTION */
+.section{
+    padding:80px 50px;
+    background:#111;
+}
+
+/* CARD */
+.card{
+    width:350px;
+    height:500px;
+
+    background-image:
+    linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+    url("file:///c:/Users/Rudra/Downloads/car2.jpg");
+
+    background-size:cover;
+    background-position:center;
+
+    color:white;
+
+    padding:40px 30px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+
+    border-radius:10px;
+}
+
+/* CARD TEXT */
+.card h2{
+    font-size:50px;
+    margin-bottom:20px;
+    line-height:1.1;
+}
+
+.card p{
+    font-size:22px;
+    line-height:1.6;
+    margin-bottom:40px;
+}
+
+/* BUTTON */
+.card button{
+    width:180px;
+    padding:15px;
+
+    background:transparent;
+    border:2px solid white;
+    color:white;
+
+    font-size:20px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.card button:hover{
+    background:white;
+    color:black;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- PARALLAX SECTION -->
+<div class="hero">
+
+    <!-- HEADER -->
+    <header class="navbar">
+
+        <!-- LOGO -->
+        <div class="logo">
+            <i class="fa-solid fa-car-side"></i>
+            Direct Automotive
+        </div>
+
+        <!-- MENU -->
+        <ul class="menu">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Pre-Owned</a></li>
+        </ul>
+
+    </header>
+
+    <!-- HERO CONTENT -->
+    <div class="content">
+        <h1>DIRECT AUTOMOTIVE</h1>
+        <p>LUXURY & PRE-OWNED CARS</p>
+    </div>
+
+</div>
+
+<!-- SECOND SECTION -->
+<div class="section">
+
+    <div class="card">
+
+        <h2>PREMIUM REVIVAL</h2>
+
+        <p>
+            At Direct Automotive, we deliver exceptional car
+            detailing services with perfection and style.
+        </p>
+
+        <button>Discover More</button>
+
+    </div>
+
+</div>
+
+</body>
+</html>
