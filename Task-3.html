@@ -4,9 +4,13 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Direct Automotive</title>
 
-<!-- Font Awesome -->
+<!-- GOOGLE LOGIN -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<!-- FONT AWESOME -->
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
@@ -16,94 +20,119 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     margin:0;
     padding:0;
     box-sizing:border-box;
+    scroll-behavior:smooth;
 }
 
 body{
-    font-family: Arial, sans-serif;
+    font-family:Arial,sans-serif;
+    background:#111;
     overflow-x:hidden;
 }
 
-/* PARALLAX BACKGROUND */
+/* HERO */
+
 .hero{
-    background-image: url("file:///c:/Users/Rudra/Downloads/pexels-justin-joseph-2753649-34706981.jpg");
-
+    background-image:url("https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1600&auto=format&fit=crop");
     height:100vh;
-
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-
+    background-size:cover;
+    background-position:center;
     position:relative;
 }
 
-/* DARK OVERLAY */
 .hero::before{
     content:"";
     position:absolute;
-    top:0;
-    left:0;
     width:100%;
     height:100%;
-    background:rgba(0,0,0,0.5);
+    background:rgba(0,0,0,0.6);
 }
 
-/* HEADER */
+/* NAVBAR */
+
 .navbar{
     width:100%;
-    background: rgba(0,0,0,0.7);
+    background:rgba(0,0,0,0.8);
     padding:15px 40px;
-
     display:flex;
     justify-content:space-between;
     align-items:center;
-
     position:fixed;
     top:0;
     z-index:1000;
 }
 
 /* LOGO */
+
 .logo{
     color:white;
     font-size:30px;
     font-weight:bold;
-
     display:flex;
     align-items:center;
     gap:10px;
-
-    position:relative;
-    z-index:2;
 }
 
 .logo i{
     color:red;
-    font-size:35px;
 }
 
 /* MENU */
+
 .menu{
     list-style:none;
     display:flex;
-    gap:30px;
-
-    position:relative;
-    z-index:2;
+    gap:25px;
 }
 
 .menu li a{
     text-decoration:none;
     color:white;
-    font-size:20px;
-    transition:0.3s;
+    font-size:18px;
 }
 
 .menu li a:hover{
     color:red;
 }
 
-/* HERO TEXT */
+/* AUTH BUTTONS */
+
+.auth-buttons{
+    display:flex;
+    gap:10px;
+}
+
+.auth-btn{
+    padding:10px 18px;
+    border:none;
+    background:red;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.auth-btn:hover{
+    background:white;
+    color:black;
+}
+
+/* USER INFO */
+
+#userInfo{
+    display:none;
+    color:white;
+    align-items:center;
+    gap:10px;
+}
+
+#userInfo img{
+    width:45px;
+    height:45px;
+    border-radius:50%;
+}
+
+/* HERO CONTENT */
+
 .content{
     position:absolute;
     top:50%;
@@ -121,68 +150,121 @@ body{
 
 .content p{
     font-size:25px;
-    letter-spacing:3px;
+    margin-bottom:30px;
 }
 
-/* SECOND SECTION */
-.section{
-    padding:80px 50px;
-    background:#111;
-}
-
-/* CARD */
-.card{
-    width:350px;
-    height:500px;
-
-    background-image:
-    linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
-    url("file:///c:/Users/Rudra/Downloads/car2.jpg");
-
-    background-size:cover;
-    background-position:center;
-
+.hero-btn{
+    padding:15px 35px;
+    background:red;
     color:white;
-
-    padding:40px 30px;
-
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-start;
-
-    border-radius:10px;
-}
-
-/* CARD TEXT */
-.card h2{
-    font-size:50px;
-    margin-bottom:20px;
-    line-height:1.1;
-}
-
-.card p{
-    font-size:22px;
-    line-height:1.6;
-    margin-bottom:40px;
-}
-
-/* BUTTON */
-.card button{
-    width:180px;
-    padding:15px;
-
-    background:transparent;
-    border:2px solid white;
-    color:white;
-
-    font-size:20px;
+    border:none;
+    border-radius:5px;
     cursor:pointer;
+    font-size:18px;
+    margin:10px;
+}
+
+.hero-btn:hover{
+    background:white;
+    color:black;
+}
+
+/* SECTION */
+
+.section{
+    padding:100px 50px;
+    background:#111;
+    color:white;
+}
+
+.section-title{
+    text-align:center;
+    font-size:50px;
+    margin-bottom:60px;
+}
+
+/* CARDS */
+
+.cards{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:30px;
+}
+
+.card{
+    width:320px;
+    background:#1b1b1b;
+    border-radius:15px;
+    overflow:hidden;
     transition:0.3s;
 }
 
+.card:hover{
+    transform:translateY(-10px);
+}
+
+.card img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+}
+
+.card-content{
+    padding:25px;
+}
+
+.card-content h2{
+    margin-bottom:15px;
+}
+
+.card-content p{
+    color:#ddd;
+    line-height:1.6;
+    margin-bottom:20px;
+}
+
+.card button{
+    width:170px;
+    padding:14px;
+    border:2px solid white;
+    background:transparent;
+    color:white;
+    cursor:pointer;
+    font-size:18px;
+}
+
 .card button:hover{
-    background:white;
-    color:black;
+    background:red;
+    border-color:red;
+}
+
+/* CONTACT */
+
+.contact{
+    background:#000;
+    color:white;
+    text-align:center;
+    padding:100px 20px;
+}
+
+.contact h2{
+    font-size:50px;
+    margin-bottom:20px;
+}
+
+.contact p{
+    font-size:22px;
+    margin-bottom:15px;
+}
+
+/* FOOTER */
+
+.footer{
+    background:#050505;
+    color:#999;
+    text-align:center;
+    padding:20px;
 }
 
 </style>
@@ -191,53 +273,533 @@ body{
 
 <body>
 
-<!-- PARALLAX SECTION -->
+<!-- HERO -->
+
 <div class="hero">
 
-    <!-- HEADER -->
-    <header class="navbar">
+<header class="navbar">
 
-        <!-- LOGO -->
-        <div class="logo">
-            <i class="fa-solid fa-car-side"></i>
-            Direct Automotive
-        </div>
+    <!-- LOGIN / REGISTER -->
 
-        <!-- MENU -->
-        <ul class="menu">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Contact</a></li>
-            <li><a href="#">About Us</a></li>
-            <li><a href="#">Pre-Owned</a></li>
-        </ul>
+    <div class="auth-buttons" id="authButtons">
 
-    </header>
+        <button class="auth-btn"
+        onclick="openRegisterPage()">
+            Register
+        </button>
 
-    <!-- HERO CONTENT -->
-    <div class="content">
-        <h1>DIRECT AUTOMOTIVE</h1>
-        <p>LUXURY & PRE-OWNED CARS</p>
+        <button class="auth-btn"
+        onclick="openLoginPage()">
+            Login
+        </button>
+
     </div>
+
+    <!-- USER INFO -->
+
+    <div id="userInfo">
+
+        <img id="userPic">
+
+        <span id="userName"></span>
+
+        <button class="auth-btn"
+        onclick="logout()">
+            Logout
+        </button>
+
+    </div>
+
+    <!-- LOGO -->
+
+    <div class="logo">
+
+        <i class="fa-solid fa-car-side"></i>
+
+        Direct Automotive
+
+    </div>
+
+    <!-- MENU -->
+
+    <ul class="menu">
+
+        <li><a href="#">Home</a></li>
+
+        <li><a href="#cars">Cars</a></li>
+
+        <li><a href="#contact">Contact</a></li>
+
+    </ul>
+
+</header>
+
+<!-- HERO CONTENT -->
+
+<div class="content">
+
+    <h1>DIRECT AUTOMOTIVE</h1>
+
+    <p>LUXURY & PRE-OWNED CARS</p>
+
+    <button class="hero-btn"
+    onclick="document.getElementById('cars').scrollIntoView()">
+        Explore Cars
+    </button>
 
 </div>
 
-<!-- SECOND SECTION -->
-<div class="section">
+</div>
+
+<!-- CARS -->
+
+<section class="section" id="cars">
+
+<h1 class="section-title">
+OUR CAR COLLECTION
+</h1>
+
+<div class="cards">
+
+    <!-- CARD 1 -->
 
     <div class="card">
 
-        <h2>PREMIUM REVIVAL</h2>
+        <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=1200&auto=format&fit=crop">
 
-        <p>
-            At Direct Automotive, we deliver exceptional car
-            detailing services with perfection and style.
-        </p>
+        <div class="card-content">
 
-        <button>Discover More</button>
+            <h2>Luxury Cars</h2>
+
+            <p>
+                Premium luxury vehicles with advanced technology.
+            </p>
+
+            <button>
+                View More
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- CARD 2 -->
+
+    <div class="card">
+
+        <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1200&auto=format&fit=crop">
+
+        <div class="card-content">
+
+            <h2>Sports Cars</h2>
+
+            <p>
+                Powerful sports cars with speed and performance.
+            </p>
+
+            <button>
+                View More
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- CARD 3 -->
+
+    <div class="card">
+
+        <img src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1200&auto=format&fit=crop">
+
+        <div class="card-content">
+
+            <h2>SUV Collection</h2>
+
+            <p>
+                Stylish SUV collection for family and adventure.
+            </p>
+
+            <button>
+                View More
+            </button>
+
+        </div>
 
     </div>
 
 </div>
+
+</section>
+
+<!-- CONTACT -->
+
+<section class="contact" id="contact">
+
+<h2>Contact Us</h2>
+
+<p>
+<i class="fa-solid fa-phone"></i>
++91 7041021160
+</p>
+
+<p>
+<i class="fa-solid fa-envelope"></i>
+info@directautomotive.com
+</p>
+
+<p>
+<i class="fa-solid fa-location-dot"></i>
+Ahmedabad, Gujarat
+</p>
+
+</section>
+
+<!-- FOOTER -->
+
+<div class="footer">
+© 2026 Direct Automotive | All Rights Reserved
+</div>
+
+<!-- JAVASCRIPT -->
+
+<script>
+
+/* REGISTER PAGE */
+
+function openRegisterPage(){
+
+    let registerWindow = window.open("", "_blank");
+
+    registerWindow.document.write(`
+
+    <!DOCTYPE html>
+
+    <html>
+
+    <head>
+
+    <title>Register</title>
+
+    <style>
+
+    body{
+        margin:0;
+        background:#111;
+        height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        font-family:Arial;
+    }
+
+    .box{
+        width:350px;
+        background:#1b1b1b;
+        padding:40px;
+        border-radius:10px;
+        text-align:center;
+        color:white;
+    }
+
+    input{
+        width:100%;
+        padding:14px;
+        margin:10px 0;
+    }
+
+    button{
+        width:100%;
+        padding:14px;
+        background:red;
+        border:none;
+        color:white;
+        cursor:pointer;
+        margin-top:10px;
+    }
+
+    </style>
+
+    </head>
+
+    <body>
+
+    <div class="box">
+
+        <h1>Register</h1>
+
+        <input type="text"
+        id="name"
+        placeholder="Full Name">
+
+        <input type="email"
+        id="email"
+        placeholder="Email">
+
+        <input type="password"
+        id="password"
+        placeholder="Password">
+
+        <button onclick="registerUser()">
+            Register
+        </button>
+
+        <button onclick="window.close()">
+            Back To Home
+        </button>
+
+    </div>
+
+    <script>
+
+    function registerUser(){
+
+        let name =
+        document.getElementById("name").value;
+
+        let email =
+        document.getElementById("email").value;
+
+        let password =
+        document.getElementById("password").value;
+
+        if(name==="" || email==="" || password===""){
+
+            alert("Please fill all fields");
+
+            return;
+        }
+
+        localStorage.setItem("userName", name);
+
+        localStorage.setItem("userEmail", email);
+
+        localStorage.setItem("userPassword", password);
+
+        alert("Registration Successful");
+
+        window.close();
+    }
+
+    <\/script>
+
+    </body>
+
+    </html>
+
+    `);
+}
+
+/* LOGIN PAGE */
+
+function openLoginPage(){
+
+    let loginWindow = window.open("", "_blank");
+
+    loginWindow.document.write(`
+
+    <!DOCTYPE html>
+
+    <html>
+
+    <head>
+
+    <title>Login</title>
+
+    <script src="https://accounts.google.com/gsi/client" async defer><\/script>
+
+    <style>
+
+    body{
+        margin:0;
+        background:#111;
+        height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        font-family:Arial;
+    }
+
+    .box{
+        width:350px;
+        background:#1b1b1b;
+        padding:40px;
+        border-radius:10px;
+        text-align:center;
+        color:white;
+    }
+
+    input{
+        width:100%;
+        padding:14px;
+        margin:10px 0;
+    }
+
+    button{
+        width:100%;
+        padding:14px;
+        background:red;
+        border:none;
+        color:white;
+        cursor:pointer;
+        margin-top:10px;
+    }
+
+    </style>
+
+    </head>
+
+    <body>
+
+    <div class="box">
+
+        <h1>Login</h1>
+
+        <input type="email"
+        id="email"
+        placeholder="Email">
+
+        <input type="password"
+        id="password"
+        placeholder="Password">
+
+        <button onclick="loginUser()">
+            Login
+        </button>
+
+        <br><br>
+
+        <!-- GOOGLE LOGIN -->
+
+        <div id="g_id_onload"
+            data-client_id="YOUR_GOOGLE_CLIENT_ID"
+            data-callback="handleCredentialResponse">
+        </div>
+
+        <div class="g_id_signin"
+            data-type="standard">
+        </div>
+
+        <br>
+
+        <button onclick="window.close()">
+            Back To Home
+        </button>
+
+    </div>
+
+    <script>
+
+    function loginUser(){
+
+        let email =
+        document.getElementById("email").value;
+
+        let password =
+        document.getElementById("password").value;
+
+        let savedEmail =
+        localStorage.getItem("userEmail");
+
+        let savedPassword =
+        localStorage.getItem("userPassword");
+
+        let savedName =
+        localStorage.getItem("userName");
+
+        if(email===savedEmail &&
+           password===savedPassword){
+
+            alert("Login Successful");
+
+            window.opener.document
+            .getElementById("authButtons")
+            .style.display="none";
+
+            window.opener.document
+            .getElementById("userInfo")
+            .style.display="flex";
+
+            window.opener.document
+            .getElementById("userName")
+            .innerHTML=savedName;
+
+            window.close();
+
+        }else{
+
+            alert("Invalid Email or Password");
+        }
+    }
+
+    /* GOOGLE LOGIN */
+
+    function handleCredentialResponse(response){
+
+        const data = parseJwt(response.credential);
+
+        window.opener.document
+        .getElementById("authButtons")
+        .style.display="none";
+
+        window.opener.document
+        .getElementById("userInfo")
+        .style.display="flex";
+
+        window.opener.document
+        .getElementById("userName")
+        .innerHTML=data.name;
+
+        window.opener.document
+        .getElementById("userPic")
+        .src=data.picture;
+
+        alert("Google Login Successful");
+
+        window.close();
+    }
+
+    function parseJwt(token){
+
+        var base64Url = token.split('.')[1];
+
+        var base64 = base64Url.replace(/-/g, '+')
+        .replace(/_/g, '/');
+
+        var jsonPayload = decodeURIComponent(
+        atob(base64).split('').map(function(c) {
+
+            return '%' + ('00' +
+            c.charCodeAt(0).toString(16))
+            .slice(-2);
+
+        }).join(''));
+
+        return JSON.parse(jsonPayload);
+    }
+
+    <\/script>
+
+    </body>
+
+    </html>
+
+    `);
+}
+
+/* LOGOUT */
+
+function logout(){
+
+    document.getElementById("authButtons")
+    .style.display="flex";
+
+    document.getElementById("userInfo")
+    .style.display="none";
+
+    alert("Logged Out");
+}
+
+</script>
 
 </body>
 </html>
