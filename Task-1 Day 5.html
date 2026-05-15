@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>Direct Automotive</title>
+
+    <!-- FONT AWESOME -->
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            scroll-behavior:smooth;
+        }
+
+        body{
+            font-family:Arial,sans-serif;
+            background:#111;
+            color:white;
+            overflow-x:hidden;
+            transition:0.5s;
+        }
+
+        /* HERO SECTION */
+
+        .hero{
+            height:100vh;
+            position:relative;
+            overflow:hidden;
+        }
+
+        /* SLIDER */
+
+        .slider{
+            position:absolute;
+            width:100%;
+            height:100%;
+        }
+
+        .slide{
+            position:absolute;
+            width:100%;
+            height:100%;
+            background-size:cover;
+            background-position:center;
+            opacity:0;
+            animation:slider 15s infinite;
+        }
+
+        .slide:nth-child(1){
+            background:url("https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1600&auto=format&fit=crop");
+            animation-delay:0s;
+        }
+
+        .slide:nth-child(2){
+            background:url("https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1600&auto=format&fit=crop");
+            animation-delay:5s;
+        }
+
+        .slide:nth-child(3){
+            background:url("https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1600&auto=format&fit=crop");
+            animation-delay:10s;
+        }
+
+        @keyframes slider{
+
+            0%{
+                opacity:0;
+                transform:scale(1.1);
+            }
+
+            10%{
+                opacity:1;
+            }
+
+            30%{
+                opacity:1;
+            }
+
+            40%{
+                opacity:0;
+            }
+
+            100%{
+                opacity:0;
+            }
+        }
+
+        .hero::before{
+            content:"";
+            position:absolute;
+            width:100%;
+            height:100%;
+            background:rgba(0,0,0,0.6);
+            z-index:1;
+        }
+
+        /* NAVBAR */
+
+        .navbar{
+            width:100%;
+            padding:15px 40px;
+            background:rgba(0,0,0,0.85);
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            position:fixed;
+            top:0;
+            z-index:1000;
+        }
+
+        .logo{
+            font-size:30px;
+            font-weight:bold;
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .logo i{
+            color:red;
+        }
+
+        .menu{
+            list-style:none;
+            display:flex;
+            gap:25px;
+        }
+
+        .menu a{
+            text-decoration:none;
+            color:white;
+            font-size:18px;
+            transition:0.3s;
+        }
+
+        .menu a:hover{
+            color:red;
+        }
+
+        /* BUTTONS */
+
+        .auth-buttons{
+            display:flex;
+            gap:10px;
+        }
+
+        .btn{
+            padding:12px 20px;
+            background:red;
+            border:none;
+            color:white;
+            cursor:pointer;
+            border-radius:5px;
+            transition:0.3s;
+            font-size:16px;
+        }
+
+        .btn:hover{
+            background:white;
+            color:black;
+        }
+
+        /* HERO CONTENT */
+
+        .content{
+            position:absolute;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+            text-align:center;
+            z-index:2;
+            animation:fadeIn 2s;
+        }
+
+        @keyframes fadeIn{
+
+            from{
+                opacity:0;
+                transform:translate(-50%,-40%);
+            }
+
+            to{
+                opacity:1;
+                transform:translate(-50%,-50%);
+            }
+        }
+
+        .content h1{
+            font-size:70px;
+            margin-bottom:20px;
+        }
+
+        .content p{
+            font-size:25px;
+            margin-bottom:30px;
+        }
+
+        /* SECTION */
+
+        .section{
+            padding:100px 50px;
+        }
+
+        .section-title{
+            text-align:center;
+            font-size:50px;
+            margin-bottom:60px;
+            color:red;
+        }
+
+        /* CARDS */
+
+        .cards{
+            display:flex;
+            justify-content:center;
+            flex-wrap:wrap;
+            gap:30px;
+        }
+
+        .card{
+            width:320px;
+            background:#1b1b1b;
+            border-radius:15px;
+            overflow:hidden;
+            transition:0.4s;
+            box-shadow:0 0 15px rgba(0,0,0,0.5);
+        }
+
+        .card:hover{
+            transform:translateY(-10px) scale(1.03);
+        }
+
+        .card img{
+            width:100%;
+            height:220px;
+            object-fit:cover;
+        }
+
+        .card-content{
+            padding:25px;
+        }
+
+        .card-content h2{
+            margin-bottom:15px;
+        }
+
+        .card-content p{
+            color:#ddd;
+            margin-bottom:20px;
+            line-height:1.6;
+        }
+
+        .card button{
+            width:100%;
+            padding:14px;
+            border:none;
+            background:red;
+            color:white;
+            cursor:pointer;
+            font-size:17px;
+            border-radius:5px;
+            transition:0.3s;
+        }
+
+        .card button:hover{
+            background:white;
+            color:black;
+        }
+
+        /* PAYMENT */
+
+        .payment{
+            background:#1b1b1b;
+            padding:80px 20px;
+        }
+
+        .payment-box{
+            max-width:500px;
+            margin:auto;
+            background:#222;
+            padding:40px;
+            border-radius:15px;
+            box-shadow:0 0 20px rgba(255,0,0,0.3);
+        }
+
+        .payment-box input,
+        .payment-box select{
+            width:100%;
+            padding:15px;
+            margin:12px 0;
+            border:none;
+            border-radius:8px;
+            font-size:16px;
+        }
+
+        .payment-box button{
+            width:100%;
+            margin-top:15px;
+        }
+
+        /* ABOUT */
+
+        .about{
+            background:#111;
+            padding:80px 40px;
+            text-align:center;
+        }
+
+        .about p{
+            max-width:900px;
+            margin:auto;
+            line-height:1.8;
+            font-size:20px;
+            color:#ddd;
+        }
+
+        /* CONTACT */
+
+        .contact{
+            background:#000;
+            text-align:center;
+            padding:80px 20px;
+        }
+
+        .contact h2{
+            font-size:45px;
+            margin-bottom:20px;
+        }
+
+        .contact p{
+            margin:10px 0;
+            font-size:20px;
+        }
+
+        /* FOOTER */
+
+        .footer{
+            background:#050505;
+            text-align:center;
+            color:#999;
+            padding:20px;
+        }
+
+        /* MODAL */
+
+        .modal{
+            display:none;
+            position:fixed;
+            z-index:2000;
+            left:0;
+            top:0;
+            width:100%;
+            height:100%;
+            background:rgba(0,0,0,0.8);
+        }
+
+        .modal-content{
+            background:#1b1b1b;
+            width:65%;
+            max-height:80vh;
+            overflow-y:auto;
+            margin:4% auto;
+            padding:30px;
+            border-radius:10px;
+            position:relative;
+        }
+
+        .modal-content::-webkit-scrollbar{
+            width:10px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb{
+            background:red;
+            border-radius:10px;
+        }
+
+        .close-btn{
+            position:absolute;
+            top:10px;
+            right:20px;
+            font-size:35px;
+            cursor:pointer;
+            color:red;
+        }
+
+        .modal-content img{
+            width:100%;
+            height:320px;
+            object-fit:cover;
+            border-radius:10px;
+            margin:20px 0;
+        }
+
+        #modalPrice{
+            color:red;
+            font-size:28px;
+            margin-bottom:15px;
+        }
+
+        /* SETTINGS BUTTON */
+
+        .settings-btn{
+            position:fixed;
+            right:25px;
+            bottom:25px;
+            width:70px;
+            height:70px;
+            border:none;
+            border-radius:50%;
+            background:red;
+            color:white;
+            font-size:30px;
+            cursor:pointer;
+            z-index:3000;
+            box-shadow:0 0 20px rgba(255,0,0,0.8);
+            animation:rotate 5s linear infinite;
+        }
+
+        .settings-btn:hover{
+            background:white;
+            color:black;
+        }
+
+        @keyframes rotate{
+
+            100%{
+                transform:rotate(360deg);
+            }
+        }
+
+        /* SETTINGS BOX */
+
+        .setting-box{
+            background:#222;
+            padding:25px;
+            margin-top:25px;
+            border-radius:10px;
+        }
+
+        .setting-box h3{
+            color:red;
+            margin-bottom:20px;
+        }
+
+        .setting-box input{
+            width:100%;
+            padding:14px;
+            margin:10px 0;
+            border:none;
+            border-radius:5px;
+            font-size:16px;
+        }
+
+        .toggle{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            background:#333;
+            padding:15px;
+            border-radius:8px;
+            margin:10px 0;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- HERO -->
+
+    <div class="hero">
+
+        <div class="slider">
+
+            <div class="slide"></div>
+            <div class="slide"></div>
+            <div class="slide"></div>
+
+        </div>
+
+        <!-- NAVBAR -->
+
+        <header class="navbar">
+
+            <div class="logo">
+
+                <i class="fa-solid fa-car-side"></i>
+
+                Direct Automotive
+
+            </div>
+
+            <ul class="menu">
+
+                <li><a href="#">Home</a></li>
+
+                <li><a href="#cars">Cars</a></li>
+
+                <li><a href="#payment">Payment</a></li>
+
+                <li><a href="#about">About</a></li>
+
+                <li><a href="#contact">Contact</a></li>
+
+            </ul>
+
+            <div class="auth-buttons">
+
+                <button class="btn">
+                    Register
+                </button>
+
+                <button class="btn">
+                    Login
+                </button>
+
+            </div>
+
+        </header>
+
+        <!-- HERO CONTENT -->
+
+        <div class="content">
+
+            <h1>DIRECT AUTOMOTIVE</h1>
+
+            <p>
+                LUXURY & PRE-OWNED CARS
+            </p>
+
+            <button class="btn"
+            onclick="document.getElementById('cars').scrollIntoView()">
+
+                Explore Cars
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- CAR SECTION -->
+
+    <section class="section" id="cars">
+
+        <h1 class="section-title">
+            OUR CAR COLLECTION
+        </h1>
+
+        <div class="cards">
+
+            <!-- CARD 1 -->
+
+            <div class="card">
+
+                <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=1200&auto=format&fit=crop">
+
+                <div class="card-content">
+
+                    <h2>Luxury Cars</h2>
+
+                    <p>
+                        Premium luxury vehicles with advanced technology.
+                    </p>
+
+                    <button onclick="showDetails('luxury')">
+                        View More
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- CARD 2 -->
+
+            <div class="card">
+
+                <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1200&auto=format&fit=crop">
+
+                <div class="card-content">
+
+                    <h2>Sports Cars</h2>
+
+                    <p>
+                        Powerful sports cars with speed and performance.
+                    </p>
+
+                    <button onclick="showDetails('sports')">
+                        View More
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- CARD 3 -->
+
+            <div class="card">
+
+                <img src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1200&auto=format&fit=crop">
+
+                <div class="card-content">
+
+                    <h2>SUV Collection</h2>
+
+                    <p>
+                        Stylish SUV collection for family and adventure.
+                    </p>
+
+                    <button onclick="showDetails('suv')">
+                        View More
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- PAYMENT SECTION -->
+
+    <section class="payment" id="payment">
+
+        <h1 class="section-title">
+            PAYMENT DETAILS
+        </h1>
+
+        <div class="payment-box">
+
+            <input type="text"
+            id="name"
+            placeholder="Enter Full Name">
+
+            <input type="email"
+            id="email"
+            placeholder="Enter Email Address">
+
+            <input type="number"
+            id="amount"
+            placeholder="Enter Amount">
+
+            <select id="method">
+
+                <option value="">
+                    Select Payment Method
+                </option>
+
+                <option>
+                    Credit Card
+                </option>
+
+                <option>
+                    Debit Card
+                </option>
+
+                <option>
+                    UPI
+                </option>
+
+                <option>
+                    Net Banking
+                </option>
+
+            </select>
+
+            <button class="btn"
+            onclick="makePayment()">
+
+                Make Payment
+
+            </button>
+
+        </div>
+
+    </section>
+
+    <!-- ABOUT -->
+
+    <section class="about" id="about">
+
+        <h1 class="section-title">
+            ABOUT US
+        </h1>
+
+        <p>
+            Direct Automotive provides luxury and premium pre-owned cars
+            with trusted customer support and world-class service.
+        </p>
+
+    </section>
+
+    <!-- CONTACT -->
+
+    <section class="contact" id="contact">
+
+        <h2>Contact Us</h2>
+
+        <p>
+            <i class="fa-solid fa-phone"></i>
+            +91 7041021160
+        </p>
+
+        <p>
+            <i class="fa-solid fa-envelope"></i>
+            info@directautomotive.com
+        </p>
+
+        <p>
+            <i class="fa-solid fa-location-dot"></i>
+            Ahmedabad, Gujarat
+        </p>
+
+    </section>
+
+    <!-- SETTINGS BUTTON -->
+
+    <button class="settings-btn"
+    onclick="openSettings()">
+
+        <i class="fa-solid fa-gear"></i>
+
+    </button>
+
+    <!-- SETTINGS MODAL -->
+
+    <div id="settingsModal"
+    class="modal">
+
+        <div class="modal-content">
+
+            <span class="close-btn"
+            onclick="closeSettings()">
+                &times;
+            </span>
+
+            <h1 style="text-align:center; color:red;">
+                SETTINGS PANEL
+            </h1>
+
+            <!-- PROFILE -->
+
+            <div class="setting-box">
+
+                <h3>
+                    <i class="fa-solid fa-user"></i>
+                    Profile Settings
+                </h3>
+
+                <input type="text"
+                placeholder="Enter Full Name">
+
+                <input type="email"
+                placeholder="Enter Email">
+
+                <input type="password"
+                placeholder="Enter Password">
+
+                <button class="btn"
+                onclick="alert('Profile Saved Successfully')">
+
+                    Save Profile
+
+                </button>
+
+            </div>
+
+            <!-- APPEARANCE -->
+
+            <div class="setting-box">
+
+                <h3>
+                    <i class="fa-solid fa-palette"></i>
+                    Appearance
+                </h3>
+
+                <button class="btn"
+                onclick="changeTheme('dark')">
+
+                    Dark Theme
+
+                </button>
+
+                <br><br>
+
+                <button class="btn"
+                onclick="changeTheme('light')">
+
+                    Light Theme
+
+                </button>
+
+                <br><br>
+
+                <button class="btn"
+                onclick="changeTheme('red')">
+
+                    Red Theme
+
+                </button>
+
+            </div>
+
+            <!-- NOTIFICATION -->
+
+            <div class="setting-box">
+
+                <h3>
+                    <i class="fa-solid fa-bell"></i>
+                    Notifications
+                </h3>
+
+                <div class="toggle">
+
+                    <span>Email Notifications</span>
+
+                    <input type="checkbox" checked>
+
+                </div>
+
+                <div class="toggle">
+
+                    <span>SMS Alerts</span>
+
+                    <input type="checkbox">
+
+                </div>
+
+                <div class="toggle">
+
+                    <span>Offers & Discounts</span>
+
+                    <input type="checkbox" checked>
+
+                </div>
+
+            </div>
+
+            <!-- SECURITY -->
+
+            <div class="setting-box">
+
+                <h3>
+                    <i class="fa-solid fa-lock"></i>
+                    Security
+                </h3>
+
+                <input type="password"
+                placeholder="Current Password">
+
+                <input type="password"
+                placeholder="New Password">
+
+                <input type="password"
+                placeholder="Confirm Password">
+
+                <button class="btn"
+                onclick="alert('Security Updated Successfully')">
+
+                    Update Security
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CAR DETAILS MODAL -->
+
+    <div id="carModal"
+    class="modal">
+
+        <div class="modal-content">
+
+            <span class="close-btn"
+            onclick="closeModal()">
+                &times;
+            </span>
+
+            <h2 id="modalTitle"></h2>
+
+            <img id="modalImage">
+
+            <h3 id="modalPrice"></h3>
+
+            <p id="modalText"></p>
+
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+
+        © 2026 Direct Automotive | All Rights Reserved
+
+    </div>
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+        /* CAR DETAILS */
+
+        function showDetails(type){
+
+            let title =
+            document.getElementById("modalTitle");
+
+            let image =
+            document.getElementById("modalImage");
+
+            let price =
+            document.getElementById("modalPrice");
+
+            let text =
+            document.getElementById("modalText");
+
+            let modal =
+            document.getElementById("carModal");
+
+            if(type === "luxury"){
+
+                title.innerHTML =
+                "Mercedes-Benz S-Class";
+
+                image.src =
+                "https://images.unsplash.com/photo-1502877338535-766e1452684a?q=80&w=1200&auto=format&fit=crop";
+
+                price.innerHTML =
+                "Price : ₹1.80 Crore";
+
+                text.innerHTML =
+                "Luxury cars provide premium comfort and advanced technology.";
+            }
+
+            else if(type === "sports"){
+
+                title.innerHTML =
+                "Ferrari Sports Edition";
+
+                image.src =
+                "https://images.unsplash.com/photo-1494905998402-395d579af36f?q=80&w=1200&auto=format&fit=crop";
+
+                price.innerHTML =
+                "Price : ₹3.50 Crore";
+
+                text.innerHTML =
+                "Sports cars offer high speed and thrilling performance.";
+            }
+
+            else if(type === "suv"){
+
+                title.innerHTML =
+                "Range Rover Defender";
+
+                image.src =
+                "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=1200&auto=format&fit=crop";
+
+                price.innerHTML =
+                "Price : ₹95 Lakh";
+
+                text.innerHTML =
+                "SUV vehicles are spacious and perfect for adventure.";
+            }
+
+            modal.style.display = "block";
+        }
+
+        function closeModal(){
+
+            document.getElementById("carModal")
+            .style.display = "none";
+        }
+
+        /* SETTINGS */
+
+        function openSettings(){
+
+            document.getElementById("settingsModal")
+            .style.display = "block";
+        }
+
+        function closeSettings(){
+
+            document.getElementById("settingsModal")
+            .style.display = "none";
+        }
+
+        /* PAYMENT */
+
+        function makePayment(){
+
+            let name =
+            document.getElementById("name").value;
+
+            let email =
+            document.getElementById("email").value;
+
+            let amount =
+            document.getElementById("amount").value;
+
+            let method =
+            document.getElementById("method").value;
+
+            if(name === "" ||
+               email === "" ||
+               amount === "" ||
+               method === ""){
+
+                alert("Please Fill All Payment Details");
+
+            }
+
+            else{
+
+                alert(
+                "Payment Successful!\n\n" +
+                "Name : " + name +
+                "\nAmount : ₹" + amount +
+                "\nMethod : " + method
+                );
+
+                document.getElementById("name").value = "";
+                document.getElementById("email").value = "";
+                document.getElementById("amount").value = "";
+                document.getElementById("method").value = "";
+            }
+        }
+
+        /* THEMES */
+
+        function changeTheme(type){
+
+            if(type === "dark"){
+
+                document.body.style.background =
+                "#111";
+
+                document.body.style.color =
+                "white";
+            }
+
+            else if(type === "light"){
+
+                document.body.style.background =
+                "white";
+
+                document.body.style.color =
+                "black";
+            }
+
+            else if(type === "red"){
+
+                document.body.style.background =
+                "#3b0000";
+
+                document.body.style.color =
+                "white";
+            }
+
+            alert("Theme Changed Successfully");
+        }
+
+    </script>
+
+</body>
+
+</html>
