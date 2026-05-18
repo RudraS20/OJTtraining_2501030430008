@@ -32,6 +32,10 @@
             transition:0.5s;
         }
 
+        img{
+            max-width:100%;
+        }
+
         /* HERO SECTION */
 
         .hero{
@@ -279,6 +283,96 @@
             color:black;
         }
 
+        /* NEW FEATURES SECTION */
+
+        .features{
+            background:#181818;
+        }
+
+        .feature-boxes{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+            gap:25px;
+        }
+
+        .feature{
+            background:#222;
+            padding:30px;
+            border-radius:15px;
+            text-align:center;
+            transition:0.4s;
+        }
+
+        .feature:hover{
+            transform:translateY(-10px);
+        }
+
+        .feature i{
+            font-size:50px;
+            color:red;
+            margin-bottom:20px;
+        }
+
+        .feature h3{
+            margin-bottom:15px;
+        }
+
+        .feature p{
+            color:#ccc;
+            line-height:1.7;
+        }
+
+        /* GALLERY */
+
+        .gallery{
+            background:#111;
+        }
+
+        .gallery-images{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+            gap:20px;
+        }
+
+        .gallery-images img{
+            width:100%;
+            height:250px;
+            object-fit:cover;
+            border-radius:15px;
+            transition:0.4s;
+        }
+
+        .gallery-images img:hover{
+            transform:scale(1.05);
+        }
+
+        /* TESTIMONIAL */
+
+        .testimonial{
+            background:#1b1b1b;
+            text-align:center;
+        }
+
+        .testimonial-box{
+            max-width:800px;
+            margin:auto;
+            background:#222;
+            padding:40px;
+            border-radius:15px;
+        }
+
+        .testimonial-box i{
+            font-size:50px;
+            color:red;
+            margin-bottom:20px;
+        }
+
+        .testimonial-box p{
+            line-height:1.8;
+            color:#ddd;
+            margin-bottom:20px;
+        }
+
         /* PAYMENT */
 
         .payment{
@@ -377,15 +471,6 @@
             position:relative;
         }
 
-        .modal-content::-webkit-scrollbar{
-            width:10px;
-        }
-
-        .modal-content::-webkit-scrollbar-thumb{
-            background:red;
-            border-radius:10px;
-        }
-
         .close-btn{
             position:absolute;
             top:10px;
@@ -473,11 +558,201 @@
             margin:10px 0;
         }
 
+        /* RESPONSIVE */
+
+        @media(max-width:900px){
+
+            .navbar{
+                flex-direction:column;
+                gap:15px;
+            }
+
+            .menu{
+                flex-wrap:wrap;
+                justify-content:center;
+            }
+
+            .content h1{
+                font-size:45px;
+            }
+
+            .content p{
+                font-size:20px;
+            }
+
+            .section-title{
+                font-size:35px;
+            }
+
+            .modal-content{
+                width:90%;
+            }
+        }
+
     </style>
 
 </head>
 
 <body>
+    <body>
+
+<!-- AUTH SCREEN -->
+
+<div id="authScreen"
+style="
+width:100%;
+height:100vh;
+background:#111;
+display:flex;
+justify-content:center;
+align-items:center;
+position:fixed;
+top:0;
+left:0;
+z-index:9999;
+">
+
+    <div style="
+    width:400px;
+    background:#1b1b1b;
+    padding:40px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 0 25px rgba(255,0,0,0.5);
+    ">
+
+        <h1 style="
+        color:red;
+        margin-bottom:30px;
+        ">
+            DIRECT AUTOMOTIVE
+        </h1>
+
+        <!-- REGISTER -->
+
+        <div id="registerBox">
+
+            <h2 style="margin-bottom:20px;">
+                Register
+            </h2>
+
+            <input type="text"
+            id="registerName"
+            placeholder="Enter Full Name"
+            style="
+            width:100%;
+            padding:15px;
+            margin:10px 0;
+            border:none;
+            border-radius:8px;
+            ">
+
+            <input type="email"
+            id="registerEmail"
+            placeholder="Enter Email"
+            style="
+            width:100%;
+            padding:15px;
+            margin:10px 0;
+            border:none;
+            border-radius:8px;
+            ">
+
+            <input type="password"
+            id="registerPassword"
+            placeholder="Enter Password"
+            style="
+            width:100%;
+            padding:15px;
+            margin:10px 0;
+            border:none;
+            border-radius:8px;
+            ">
+
+            <button class="btn"
+            style="width:100%;"
+            onclick="registerUser()">
+
+                Register
+
+            </button>
+
+            <p style="margin-top:20px;">
+
+                Already have account?
+
+                <span
+                onclick="showLogin()"
+                style="
+                color:red;
+                cursor:pointer;
+                ">
+                    Login
+                </span>
+
+            </p>
+
+        </div>
+
+        <!-- LOGIN -->
+
+        <div id="loginBox"
+        style="display:none;">
+
+            <h2 style="margin-bottom:20px;">
+                Login
+            </h2>
+
+            <input type="email"
+            id="loginEmail"
+            placeholder="Enter Email"
+            style="
+            width:100%;
+            padding:15px;
+            margin:10px 0;
+            border:none;
+            border-radius:8px;
+            ">
+
+            <input type="password"
+            id="loginPassword"
+            placeholder="Enter Password"
+            style="
+            width:100%;
+            padding:15px;
+            margin:10px 0;
+            border:none;
+            border-radius:8px;
+            ">
+
+            <button class="btn"
+            style="width:100%;"
+            onclick="loginUser()">
+
+                Login
+
+            </button>
+
+            <p style="margin-top:20px;">
+
+                Create new account?
+
+                <span
+                onclick="showRegister()"
+                style="
+                color:red;
+                cursor:pointer;
+                ">
+                    Register
+                </span>
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
 
     <!-- HERO -->
 
@@ -509,6 +784,10 @@
 
                 <li><a href="#cars">Cars</a></li>
 
+                <li><a href="#features">Features</a></li>
+
+                <li><a href="#gallery">Gallery</a></li>
+
                 <li><a href="#payment">Payment</a></li>
 
                 <li><a href="#about">About</a></li>
@@ -519,15 +798,17 @@
 
             <div class="auth-buttons">
 
-                <button class="btn">
-                    Register
-                </button>
+    <button class="btn"
+    onclick="openRegisterModal()">
+        Register
+    </button>
 
-                <button class="btn">
-                    Login
-                </button>
+    <button class="btn"
+    onclick="openLoginModal()">
+        Login
+    </button>
 
-            </div>
+</div>
 
         </header>
 
@@ -632,6 +913,115 @@
 
     </section>
 
+    <!-- FEATURES -->
+
+    <section class="section features" id="features">
+
+        <h1 class="section-title">
+            WHY CHOOSE US
+        </h1>
+
+        <div class="feature-boxes">
+
+            <div class="feature">
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+                <h3>Trusted Service</h3>
+
+                <p>
+                    100% verified luxury and pre-owned cars.
+                </p>
+
+            </div>
+
+            <div class="feature">
+
+                <i class="fa-solid fa-money-check-dollar"></i>
+
+                <h3>Easy Finance</h3>
+
+                <p>
+                    Flexible EMI and finance options available.
+                </p>
+
+            </div>
+
+            <div class="feature">
+
+                <i class="fa-solid fa-car"></i>
+
+                <h3>Premium Collection</h3>
+
+                <p>
+                    Latest luxury, sports and SUV vehicles.
+                </p>
+
+            </div>
+
+            <div class="feature">
+
+                <i class="fa-solid fa-headset"></i>
+
+                <h3>24/7 Support</h3>
+
+                <p>
+                    Dedicated customer support anytime.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- GALLERY -->
+
+    <section class="section gallery" id="gallery">
+
+        <h1 class="section-title">
+            CAR GALLERY
+        </h1>
+
+        <div class="gallery-images">
+
+            <img src="https://images.unsplash.com/photo-1502877338535-766e1452684a?q=80&w=1200&auto=format&fit=crop">
+
+            <img src="https://images.unsplash.com/photo-1494905998402-395d579af36f?q=80&w=1200&auto=format&fit=crop">
+
+            <img src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=1200&auto=format&fit=crop">
+
+            <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=1200&auto=format&fit=crop">
+
+        </div>
+
+    </section>
+
+    <!-- TESTIMONIAL -->
+
+    <section class="section testimonial">
+
+        <h1 class="section-title">
+            CUSTOMER REVIEW
+        </h1>
+
+        <div class="testimonial-box">
+
+            <i class="fa-solid fa-quote-left"></i>
+
+            <p>
+                Excellent service and premium car collection.
+                The buying process was smooth and professional.
+            </p>
+
+            <h3>
+                - Happy Customer
+            </h3>
+
+        </div>
+
+    </section>
+
     <!-- PAYMENT SECTION -->
 
     <section class="payment" id="payment">
@@ -700,6 +1090,8 @@
         <p>
             Direct Automotive provides luxury and premium pre-owned cars
             with trusted customer support and world-class service.
+            We deliver high quality vehicles with modern technology,
+            affordable finance options and excellent after-sales support.
         </p>
 
     </section>
@@ -752,8 +1144,6 @@
                 SETTINGS PANEL
             </h1>
 
-            <!-- PROFILE -->
-
             <div class="setting-box">
 
                 <h3>
@@ -778,8 +1168,6 @@
                 </button>
 
             </div>
-
-            <!-- APPEARANCE -->
 
             <div class="setting-box">
 
@@ -810,68 +1198,6 @@
                 onclick="changeTheme('red')">
 
                     Red Theme
-
-                </button>
-
-            </div>
-
-            <!-- NOTIFICATION -->
-
-            <div class="setting-box">
-
-                <h3>
-                    <i class="fa-solid fa-bell"></i>
-                    Notifications
-                </h3>
-
-                <div class="toggle">
-
-                    <span>Email Notifications</span>
-
-                    <input type="checkbox" checked>
-
-                </div>
-
-                <div class="toggle">
-
-                    <span>SMS Alerts</span>
-
-                    <input type="checkbox">
-
-                </div>
-
-                <div class="toggle">
-
-                    <span>Offers & Discounts</span>
-
-                    <input type="checkbox" checked>
-
-                </div>
-
-            </div>
-
-            <!-- SECURITY -->
-
-            <div class="setting-box">
-
-                <h3>
-                    <i class="fa-solid fa-lock"></i>
-                    Security
-                </h3>
-
-                <input type="password"
-                placeholder="Current Password">
-
-                <input type="password"
-                placeholder="New Password">
-
-                <input type="password"
-                placeholder="Confirm Password">
-
-                <button class="btn"
-                onclick="alert('Security Updated Successfully')">
-
-                    Update Security
 
                 </button>
 
@@ -915,7 +1241,85 @@
 
     <!-- JAVASCRIPT -->
 
+
     <script>
+        /* AUTH SCREEN */
+
+function showLogin(){
+
+    document.getElementById("registerBox")
+    .style.display = "none";
+
+    document.getElementById("loginBox")
+    .style.display = "block";
+}
+
+function showRegister(){
+
+    document.getElementById("loginBox")
+    .style.display = "none";
+
+    document.getElementById("registerBox")
+    .style.display = "block";
+}
+
+function registerUser(){
+
+    let name =
+    document.getElementById("registerName").value;
+
+    let email =
+    document.getElementById("registerEmail").value;
+
+    let password =
+    document.getElementById("registerPassword").value;
+
+    if(name === "" ||
+       email === "" ||
+       password === ""){
+
+        alert("Please Fill All Register Details");
+    }
+
+    else{
+
+        localStorage.setItem("userEmail", email);
+        localStorage.setItem("userPassword", password);
+
+        alert("Registration Successful");
+
+        showLogin();
+    }
+}
+
+function loginUser(){
+
+    let email =
+    document.getElementById("loginEmail").value;
+
+    let password =
+    document.getElementById("loginPassword").value;
+
+    let savedEmail =
+    localStorage.getItem("userEmail");
+
+    let savedPassword =
+    localStorage.getItem("userPassword");
+
+    if(email === savedEmail &&
+       password === savedPassword){
+
+        alert("Login Successful");
+
+        document.getElementById("authScreen")
+        .style.display = "none";
+    }
+
+    else{
+
+        alert("Invalid Email or Password");
+    }
+}
 
         /* CAR DETAILS */
 
@@ -1077,6 +1481,27 @@
             }
 
             alert("Theme Changed Successfully");
+        }
+
+        /* CLOSE MODAL OUTSIDE CLICK */
+
+        window.onclick = function(event){
+
+            let carModal =
+            document.getElementById("carModal");
+
+            let settingsModal =
+            document.getElementById("settingsModal");
+
+            if(event.target == carModal){
+
+                carModal.style.display = "none";
+            }
+
+            if(event.target == settingsModal){
+
+                settingsModal.style.display = "none";
+            }
         }
 
     </script>
