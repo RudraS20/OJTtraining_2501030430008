@@ -5,756 +5,536 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-    content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Direct Automotive</title>
 
-    <!-- FONT AWESOME -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
-
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            scroll-behavior:smooth;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
         }
 
-        body{
-            font-family:Arial,sans-serif;
-            background:#111;
-            color:white;
-            overflow-x:hidden;
-            transition:0.5s;
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+            overflow-x: hidden;
+            transition: 0.5s;
+            position: relative;
         }
 
-        img{
-            max-width:100%;
+        /* Dynamic Camera ISO Overlay Layer */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        img {
+            max-width: 100%;
         }
 
         /* HERO SECTION */
 
-        .hero{
-            height:100vh;
-            position:relative;
-            overflow:hidden;
+        .hero {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
         }
 
         /* SLIDER */
 
-        .slider{
-            position:absolute;
-            width:100%;
-            height:100%;
+        .slider {
+            position: absolute;
+            width: 100%;
+            height: 100%;
         }
 
-        .slide{
-            position:absolute;
-            width:100%;
-            height:100%;
-            background-size:cover;
-            background-position:center;
-            opacity:0;
-            animation:slider 15s infinite;
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            /* Shutter speed variable defaults to 15s */
+            animation: slider var(--shutter-duration, 15s) infinite;
+            transition: filter 0.4s ease;
         }
 
-        .slide:nth-child(1){
-            background:url("https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1600&auto=format&fit=crop");
-            animation-delay:0s;
+        .slide:nth-child(1) {
+            background-image: url("https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1600&auto=format&fit=crop");
+            animation-delay: 0s;
         }
 
-        .slide:nth-child(2){
-            background:url("https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1600&auto=format&fit=crop");
-            animation-delay:5s;
+        .slide:nth-child(2) {
+            background-image: url("https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1600&auto=format&fit=crop");
+            /* Delays are automatically recalculated dynamically inside the JS engine */
+            animation-delay: var(--delay-step-1, 5s);
         }
 
-        .slide:nth-child(3){
-            background:url("https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1600&auto=format&fit=crop");
-            animation-delay:10s;
+        .slide:nth-child(3) {
+            background-image: url("https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1600&auto=format&fit=crop");
+            animation-delay: var(--delay-step-2, 10s);
         }
 
-        @keyframes slider{
-
-            0%{
-                opacity:0;
-                transform:scale(1.1);
+        @keyframes slider {
+            0% {
+                opacity: 0;
+                transform: scale(1.1);
             }
 
-            10%{
-                opacity:1;
+            10% {
+                opacity: 1;
             }
 
-            30%{
-                opacity:1;
+            30% {
+                opacity: 1;
             }
 
-            40%{
-                opacity:0;
+            40% {
+                opacity: 0;
             }
 
-            100%{
-                opacity:0;
+            100% {
+                opacity: 0;
             }
         }
 
-        .hero::before{
-            content:"";
-            position:absolute;
-            width:100%;
-            height:100%;
-            background:rgba(0,0,0,0.6);
-            z-index:1;
+        .hero::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
         }
 
         /* NAVBAR */
 
-        .navbar{
-            width:100%;
-            padding:15px 40px;
-            background:rgba(0,0,0,0.85);
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            position:fixed;
-            top:0;
-            z-index:1000;
+        .navbar {
+            width: 100%;
+            padding: 15px 0;
+            background: rgba(0, 0, 0, 0.85);
+            position: fixed;
+            top: 0;
+            z-index: 1000;
         }
 
-        .logo{
-            font-size:30px;
-            font-weight:bold;
-            display:flex;
-            align-items:center;
-            gap:10px;
+        .logo {
+            font-size: 30px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
         }
 
-        .logo i{
-            color:red;
+        .logo i {
+            color: red;
         }
 
-        .menu{
-            list-style:none;
-            display:flex;
-            gap:25px;
+        .menu {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            padding-left: 0;
+            margin-bottom: 0;
+            flex-wrap: wrap;
         }
 
-        .menu a{
-            text-decoration:none;
-            color:white;
-            font-size:18px;
-            transition:0.3s;
+        .menu a {
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+            transition: 0.3s;
         }
 
-        .menu a:hover{
-            color:red;
+        .menu a:hover {
+            color: red;
         }
 
         /* BUTTONS */
 
-        .auth-buttons{
-            display:flex;
-            gap:10px;
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
         }
 
-        .btn{
-            padding:12px 20px;
-            background:red;
-            border:none;
-            color:white;
-            cursor:pointer;
-            border-radius:5px;
-            transition:0.3s;
-            font-size:16px;
+        .btn-custom {
+            padding: 12px 20px;
+            background: red;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+            font-size: 16px;
         }
 
-        .btn:hover{
-            background:white;
-            color:black;
+        .btn-custom:hover {
+            background: white;
+            color: black;
         }
 
         /* HERO CONTENT */
 
-        .content{
-            position:absolute;
-            top:50%;
-            left:50%;
-            transform:translate(-50%,-50%);
-            text-align:center;
-            z-index:2;
-            animation:fadeIn 2s;
+        .content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 2;
+            width: 100%;
         }
 
-        @keyframes fadeIn{
-
-            from{
-                opacity:0;
-                transform:translate(-50%,-40%);
-            }
-
-            to{
-                opacity:1;
-                transform:translate(-50%,-50%);
-            }
+        .content h1 {
+            font-size: 70px;
+            margin-bottom: 20px;
         }
 
-        .content h1{
-            font-size:70px;
-            margin-bottom:20px;
-        }
-
-        .content p{
-            font-size:25px;
-            margin-bottom:30px;
+        .content p {
+            font-size: 25px;
+            margin-bottom: 30px;
         }
 
         /* SECTION */
 
-        .section{
-            padding:100px 50px;
+        .section {
+            padding: 100px 20px;
         }
 
-        .section-title{
-            text-align:center;
-            font-size:50px;
-            margin-bottom:60px;
-            color:red;
+        .section-title {
+            text-align: center;
+            font-size: 50px;
+            margin-bottom: 60px;
+            color: red;
         }
 
         /* CARDS */
 
-        .cards{
-            display:flex;
-            justify-content:center;
-            flex-wrap:wrap;
-            gap:30px;
+        .card {
+            background: #1b1b1b;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: 0.4s;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            border: none;
+            height: 100%;
+            color: white;
         }
 
-        .card{
-            width:320px;
-            background:#1b1b1b;
-            border-radius:15px;
-            overflow:hidden;
-            transition:0.4s;
-            box-shadow:0 0 15px rgba(0,0,0,0.5);
+        .card:hover {
+            transform: translateY(-10px) scale(1.03);
         }
 
-        .card:hover{
-            transform:translateY(-10px) scale(1.03);
+        .card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
         }
 
-        .card img{
-            width:100%;
-            height:220px;
-            object-fit:cover;
+        .card-content {
+            padding: 25px;
         }
 
-        .card-content{
-            padding:25px;
+        .card-content h2 {
+            margin-bottom: 15px;
         }
 
-        .card-content h2{
-            margin-bottom:15px;
+        .card-content p {
+            color: #ddd;
+            margin-bottom: 20px;
+            line-height: 1.6;
         }
 
-        .card-content p{
-            color:#ddd;
-            margin-bottom:20px;
-            line-height:1.6;
+        .card button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            background: red;
+            color: white;
+            cursor: pointer;
+            font-size: 17px;
+            border-radius: 5px;
+            transition: 0.3s;
         }
 
-        .card button{
-            width:100%;
-            padding:14px;
-            border:none;
-            background:red;
-            color:white;
-            cursor:pointer;
-            font-size:17px;
-            border-radius:5px;
-            transition:0.3s;
+        .card button:hover {
+            background: white;
+            color: black;
         }
 
-        .card button:hover{
-            background:white;
-            color:black;
+        /* FEATURES */
+
+        .features {
+            background: #181818;
         }
 
-        /* NEW FEATURES SECTION */
-
-        .features{
-            background:#181818;
+        .feature {
+            background: #222;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: 0.4s;
+            height: 100%;
         }
 
-        .feature-boxes{
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-            gap:25px;
+        .feature:hover {
+            transform: translateY(-10px);
         }
 
-        .feature{
-            background:#222;
-            padding:30px;
-            border-radius:15px;
-            text-align:center;
-            transition:0.4s;
+        .feature i {
+            font-size: 50px;
+            color: red;
+            margin-bottom: 20px;
         }
 
-        .feature:hover{
-            transform:translateY(-10px);
+        .feature h3 {
+            margin-bottom: 15px;
         }
 
-        .feature i{
-            font-size:50px;
-            color:red;
-            margin-bottom:20px;
-        }
-
-        .feature h3{
-            margin-bottom:15px;
-        }
-
-        .feature p{
-            color:#ccc;
-            line-height:1.7;
+        .feature p {
+            color: #ccc;
+            line-height: 1.7;
         }
 
         /* GALLERY */
 
-        .gallery{
-            background:#111;
+        .gallery-images img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            transition: 0.4s;
         }
 
-        .gallery-images{
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-            gap:20px;
-        }
-
-        .gallery-images img{
-            width:100%;
-            height:250px;
-            object-fit:cover;
-            border-radius:15px;
-            transition:0.4s;
-        }
-
-        .gallery-images img:hover{
-            transform:scale(1.05);
+        .gallery-images img:hover {
+            transform: scale(1.05);
         }
 
         /* TESTIMONIAL */
 
-        .testimonial{
-            background:#1b1b1b;
-            text-align:center;
+        .testimonial {
+            background: #1b1b1b;
+            text-align: center;
         }
 
-        .testimonial-box{
-            max-width:800px;
-            margin:auto;
-            background:#222;
-            padding:40px;
-            border-radius:15px;
+        .testimonial-box {
+            max-width: 800px;
+            margin: auto;
+            background: #222;
+            padding: 40px;
+            border-radius: 15px;
         }
 
-        .testimonial-box i{
-            font-size:50px;
-            color:red;
-            margin-bottom:20px;
+        .testimonial-box i {
+            font-size: 50px;
+            color: red;
+            margin-bottom: 20px;
         }
 
-        .testimonial-box p{
-            line-height:1.8;
-            color:#ddd;
-            margin-bottom:20px;
+        .testimonial-box p {
+            line-height: 1.8;
+            color: #ddd;
+            margin-bottom: 20px;
         }
 
         /* PAYMENT */
 
-        .payment{
-            background:#1b1b1b;
-            padding:80px 20px;
+        .payment {
+            background: #1b1b1b;
+            padding: 80px 20px;
         }
 
-        .payment-box{
-            max-width:500px;
-            margin:auto;
-            background:#222;
-            padding:40px;
-            border-radius:15px;
-            box-shadow:0 0 20px rgba(255,0,0,0.3);
+        .payment-box {
+            max-width: 500px;
+            margin: auto;
+            background: #222;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
         }
 
         .payment-box input,
-        .payment-box select{
-            width:100%;
-            padding:15px;
-            margin:12px 0;
-            border:none;
-            border-radius:8px;
-            font-size:16px;
-        }
-
-        .payment-box button{
-            width:100%;
-            margin-top:15px;
+        .payment-box select {
+            width: 100%;
+            padding: 15px;
+            margin: 12px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
         }
 
         /* ABOUT */
 
-        .about{
-            background:#111;
-            padding:80px 40px;
-            text-align:center;
+        .about {
+            background: #111;
+            padding: 80px 20px;
+            text-align: center;
         }
 
-        .about p{
-            max-width:900px;
-            margin:auto;
-            line-height:1.8;
-            font-size:20px;
-            color:#ddd;
+        .about p {
+            max-width: 900px;
+            margin: auto;
+            line-height: 1.8;
+            font-size: 20px;
+            color: #ddd;
         }
 
         /* CONTACT */
 
-        .contact{
-            background:#000;
-            text-align:center;
-            padding:80px 20px;
+        .contact {
+            background: #000;
+            text-align: center;
+            padding: 80px 20px;
         }
 
-        .contact h2{
-            font-size:45px;
-            margin-bottom:20px;
+        .contact h2 {
+            font-size: 45px;
+            margin-bottom: 20px;
         }
 
-        .contact p{
-            margin:10px 0;
-            font-size:20px;
+        .contact p {
+            margin: 10px 0;
+            font-size: 20px;
         }
 
         /* FOOTER */
 
-        .footer{
-            background:#050505;
-            text-align:center;
-            color:#999;
-            padding:20px;
+        .footer {
+            background: #050505;
+            text-align: center;
+            color: #999;
+            padding: 20px;
         }
 
-        /* MODAL */
-
-        .modal{
-            display:none;
-            position:fixed;
-            z-index:2000;
-            left:0;
-            top:0;
-            width:100%;
-            height:100%;
-            background:rgba(0,0,0,0.8);
+        /* FLOATING SETTINGS BUTTON */
+        .settings-floating {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: red;
+            color: white;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
+            border: none;
+            z-index: 2000;
+            transition: all 0.4s ease-in-out;
         }
 
-        .modal-content{
-            background:#1b1b1b;
-            width:65%;
-            max-height:80vh;
-            overflow-y:auto;
-            margin:4% auto;
-            padding:30px;
-            border-radius:10px;
-            position:relative;
+        .settings-floating:hover {
+            background: white;
+            color: black;
+            transform: rotate(90deg) scale(1.05);
         }
 
-        .close-btn{
-            position:absolute;
-            top:10px;
-            right:20px;
-            font-size:35px;
-            cursor:pointer;
-            color:red;
+        /* SETTINGS MODAL CUSTOM STYLES */
+        .modal-content-custom {
+            background: #1b1b1b !important;
+            color: white !important;
+            border: 2px solid red !important;
+            border-radius: 15px !important;
         }
 
-        .modal-content img{
-            width:100%;
-            height:320px;
-            object-fit:cover;
-            border-radius:10px;
-            margin:20px 0;
+        .modal-header-custom {
+            border-bottom: 1px solid #333 !important;
         }
 
-        #modalPrice{
-            color:red;
-            font-size:28px;
-            margin-bottom:15px;
+        .modal-footer-custom {
+            border-top: 1px solid #333 !important;
         }
 
-        /* SETTINGS BUTTON */
-
-        .settings-btn{
-            position:fixed;
-            right:25px;
-            bottom:25px;
-            width:70px;
-            height:70px;
-            border:none;
-            border-radius:50%;
-            background:red;
-            color:white;
-            font-size:30px;
-            cursor:pointer;
-            z-index:3000;
-            box-shadow:0 0 20px rgba(255,0,0,0.8);
-            animation:rotate 5s linear infinite;
+        .settings-label {
+            color: #ccc;
+            font-size: 14px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .settings-btn:hover{
-            background:white;
-            color:black;
+        .settings-label i {
+            color: red;
         }
 
-        @keyframes rotate{
-
-            100%{
-                transform:rotate(360deg);
-            }
+        .modal-body select,
+        .modal-body input {
+            background: #252525 !important;
+            color: white !important;
+            border: 1px solid #444 !important;
         }
 
-        /* SETTINGS BOX */
-
-        .setting-box{
-            background:#222;
-            padding:25px;
-            margin-top:25px;
-            border-radius:10px;
-        }
-
-        .setting-box h3{
-            color:red;
-            margin-bottom:20px;
-        }
-
-        .setting-box input{
-            width:100%;
-            padding:14px;
-            margin:10px 0;
-            border:none;
-            border-radius:5px;
-            font-size:16px;
-        }
-
-        .toggle{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            background:#333;
-            padding:15px;
-            border-radius:8px;
-            margin:10px 0;
+        .modal-body select:focus,
+        .modal-body input:focus {
+            border-color: red !important;
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.5) !important;
         }
 
         /* RESPONSIVE */
 
-        @media(max-width:900px){
+        @media(max-width:768px) {
 
-            .navbar{
-                flex-direction:column;
-                gap:15px;
+            .content h1 {
+                font-size: 40px;
             }
 
-            .menu{
-                flex-wrap:wrap;
-                justify-content:center;
+            .content p {
+                font-size: 18px;
             }
 
-            .content h1{
-                font-size:45px;
+            .section-title {
+                font-size: 35px;
             }
 
-            .content p{
-                font-size:20px;
+            .logo {
+                justify-content: center;
+                margin-bottom: 15px;
             }
 
-            .section-title{
-                font-size:35px;
+            .auth-buttons {
+                justify-content: center;
+                margin-top: 15px;
             }
 
-            .modal-content{
-                width:90%;
+            .settings-floating {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
             }
         }
-
     </style>
 
 </head>
 
 <body>
-    <body>
-
-<!-- AUTH SCREEN -->
-
-<div id="authScreen"
-style="
-width:100%;
-height:100vh;
-background:#111;
-display:flex;
-justify-content:center;
-align-items:center;
-position:fixed;
-top:0;
-left:0;
-z-index:9999;
-">
-
-    <div style="
-    width:400px;
-    background:#1b1b1b;
-    padding:40px;
-    border-radius:15px;
-    text-align:center;
-    box-shadow:0 0 25px rgba(255,0,0,0.5);
-    ">
-
-        <h1 style="
-        color:red;
-        margin-bottom:30px;
-        ">
-            DIRECT AUTOMOTIVE
-        </h1>
-
-        <!-- REGISTER -->
-
-        <div id="registerBox">
-
-            <h2 style="margin-bottom:20px;">
-                Register
-            </h2>
-
-            <input type="text"
-            id="registerName"
-            placeholder="Enter Full Name"
-            style="
-            width:100%;
-            padding:15px;
-            margin:10px 0;
-            border:none;
-            border-radius:8px;
-            ">
-
-            <input type="email"
-            id="registerEmail"
-            placeholder="Enter Email"
-            style="
-            width:100%;
-            padding:15px;
-            margin:10px 0;
-            border:none;
-            border-radius:8px;
-            ">
-
-            <input type="password"
-            id="registerPassword"
-            placeholder="Enter Password"
-            style="
-            width:100%;
-            padding:15px;
-            margin:10px 0;
-            border:none;
-            border-radius:8px;
-            ">
-
-            <button class="btn"
-            style="width:100%;"
-            onclick="registerUser()">
-
-                Register
-
-            </button>
-
-            <p style="margin-top:20px;">
-
-                Already have account?
-
-                <span
-                onclick="showLogin()"
-                style="
-                color:red;
-                cursor:pointer;
-                ">
-                    Login
-                </span>
-
-            </p>
-
-        </div>
-
-        <!-- LOGIN -->
-
-        <div id="loginBox"
-        style="display:none;">
-
-            <h2 style="margin-bottom:20px;">
-                Login
-            </h2>
-
-            <input type="email"
-            id="loginEmail"
-            placeholder="Enter Email"
-            style="
-            width:100%;
-            padding:15px;
-            margin:10px 0;
-            border:none;
-            border-radius:8px;
-            ">
-
-            <input type="password"
-            id="loginPassword"
-            placeholder="Enter Password"
-            style="
-            width:100%;
-            padding:15px;
-            margin:10px 0;
-            border:none;
-            border-radius:8px;
-            ">
-
-            <button class="btn"
-            style="width:100%;"
-            onclick="loginUser()">
-
-                Login
-
-            </button>
-
-            <p style="margin-top:20px;">
-
-                Create new account?
-
-                <span
-                onclick="showRegister()"
-                style="
-                color:red;
-                cursor:pointer;
-                ">
-                    Register
-                </span>
-
-            </p>
-
-        </div>
-
-    </div>
-
-</div>
-
-    <!-- HERO -->
 
     <div class="hero">
 
@@ -766,144 +546,184 @@ z-index:9999;
 
         </div>
 
-        <!-- NAVBAR -->
-
         <header class="navbar">
 
-            <div class="logo">
+            <div class="container">
 
-                <i class="fa-solid fa-car-side"></i>
+                <div class="row align-items-center">
 
-                Direct Automotive
+                    <div class="col-lg-3 text-center text-lg-start">
+
+                        <div class="logo">
+
+                            <i class="bi bi-car-front-fill"></i>
+
+                            Direct Automotive
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-6">
+
+                        <ul class="menu">
+
+                            <li><a href="#"><i class="bi bi-house-fill"></i> Home</a></li>
+
+                            <li><a href="#cars"><i class="bi bi-car-front-fill"></i> Cars</a></li>
+
+                            <li><a href="#features"><i class="bi bi-stars"></i> Features</a></li>
+
+                            <li><a href="#gallery"><i class="bi bi-images"></i> Gallery</a></li>
+
+                            <li><a href="#payment"><i class="bi bi-credit-card-fill"></i> Payment</a></li>
+
+                            <li><a href="#about"><i class="bi bi-info-circle-fill"></i> About</a></li>
+
+                            <li><a href="#contact"><i class="bi bi-telephone-fill"></i> Contact</a></li>
+
+                        </ul>
+
+                    </div>
+
+                    <div class="col-lg-3 text-center text-lg-end">
+
+                        <div class="auth-buttons" id="navAuthContainer">
+
+                            <!-- Connected dynamically via JavaScript below -->
+                            <button class="btn-custom" id="navRegisterBtn">
+                                <i class="bi bi-person-plus-fill"></i> Register
+                            </button>
+
+                            <button class="btn-custom" id="navLoginBtn">
+                                <i class="bi bi-box-arrow-in-right"></i> Login
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
 
             </div>
-
-            <ul class="menu">
-
-                <li><a href="#">Home</a></li>
-
-                <li><a href="#cars">Cars</a></li>
-
-                <li><a href="#features">Features</a></li>
-
-                <li><a href="#gallery">Gallery</a></li>
-
-                <li><a href="#payment">Payment</a></li>
-
-                <li><a href="#about">About</a></li>
-
-                <li><a href="#contact">Contact</a></li>
-
-            </ul>
-
-            <div class="auth-buttons">
-
-    <button class="btn"
-    onclick="openRegisterModal()">
-        Register
-    </button>
-
-    <button class="btn"
-    onclick="openLoginModal()">
-        Login
-    </button>
-
-</div>
 
         </header>
 
-        <!-- HERO CONTENT -->
-
         <div class="content">
 
-            <h1>DIRECT AUTOMOTIVE</h1>
+            <div class="container">
 
-            <p>
-                LUXURY & PRE-OWNED CARS
-            </p>
+                <div class="row justify-content-center">
 
-            <button class="btn"
-            onclick="document.getElementById('cars').scrollIntoView()">
+                    <div class="col-lg-8">
 
-                Explore Cars
+                        <h1>DIRECT AUTOMOTIVE</h1>
 
-            </button>
+                        <p>
+                            <i class="bi bi-lightning-charge-fill"></i>
+                            LUXURY & PRE-OWNED CARS
+                        </p>
+
+                        <button class="btn-custom" onclick="document.getElementById('cars').scrollIntoView()">
+
+                            <i class="bi bi-search"></i>
+                            Explore Cars
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </div>
 
     </div>
-
-    <!-- CAR SECTION -->
 
     <section class="section" id="cars">
 
-        <h1 class="section-title">
-            OUR CAR COLLECTION
-        </h1>
+        <div class="container">
 
-        <div class="cards">
+            <h1 class="section-title">
+                <i class="bi bi-car-front"></i>
+                OUR CAR COLLECTION
+            </h1>
 
-            <!-- CARD 1 -->
+            <div class="row g-4">
 
-            <div class="card">
+                <div class="col-lg-4 col-md-6">
 
-                <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=1200&auto=format&fit=crop">
+                    <div class="card">
 
-                <div class="card-content">
+                        <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=1200&auto=format&fit=crop">
 
-                    <h2>Luxury Cars</h2>
+                        <div class="card-content">
 
-                    <p>
-                        Premium luxury vehicles with advanced technology.
-                    </p>
+                            <h2><i class="bi bi-gem"></i> Luxury Cars</h2>
 
-                    <button onclick="showDetails('luxury')">
-                        View More
-                    </button>
+                            <p>
+                                Premium luxury vehicles with advanced technology.
+                            </p>
 
-                </div>
+                            <button class="car-explore-btn">
+                                <i class="bi bi-arrow-right-circle-fill"></i>
+                                View More
+                            </button>
 
-            </div>
+                        </div>
 
-            <!-- CARD 2 -->
-
-            <div class="card">
-
-                <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1200&auto=format&fit=crop">
-
-                <div class="card-content">
-
-                    <h2>Sports Cars</h2>
-
-                    <p>
-                        Powerful sports cars with speed and performance.
-                    </p>
-
-                    <button onclick="showDetails('sports')">
-                        View More
-                    </button>
+                    </div>
 
                 </div>
 
-            </div>
+                <div class="col-lg-4 col-md-6">
 
-            <!-- CARD 3 -->
+                    <div class="card">
 
-            <div class="card">
+                        <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1200&auto=format&fit=crop">
 
-                <img src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1200&auto=format&fit=crop">
+                        <div class="card-content">
 
-                <div class="card-content">
+                            <h2><i class="bi bi-speedometer2"></i> Sports Cars</h2>
 
-                    <h2>SUV Collection</h2>
+                            <p>
+                                Powerful sports cars with speed and performance.
+                            </p>
 
-                    <p>
-                        Stylish SUV collection for family and adventure.
-                    </p>
+                            <button class="car-explore-btn">
+                                <i class="bi bi-arrow-right-circle-fill"></i>
+                                View More
+                            </button>
 
-                    <button onclick="showDetails('suv')">
-                        View More
-                    </button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+
+                    <div class="card">
+
+                        <img src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1200&auto=format&fit=crop">
+
+                        <div class="card-content">
+
+                            <h2><i class="bi bi-truck-front-fill"></i> SUV Collection</h2>
+
+                            <p>
+                                Stylish SUV collection for family and adventure.
+                            </p>
+
+                            <button class="car-explore-btn">
+                                <i class="bi bi-arrow-right-circle-fill"></i>
+                                View More
+                            </button>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -912,598 +732,603 @@ z-index:9999;
         </div>
 
     </section>
-
-    <!-- FEATURES -->
 
     <section class="section features" id="features">
 
-        <h1 class="section-title">
-            WHY CHOOSE US
-        </h1>
+        <div class="container">
 
-        <div class="feature-boxes">
+            <h1 class="section-title">
+                <i class="bi bi-award-fill"></i>
+                WHY CHOOSE US
+            </h1>
 
-            <div class="feature">
+            <div class="row g-4">
 
-                <i class="fa-solid fa-shield-halved"></i>
+                <div class="col-lg-3 col-md-6">
 
-                <h3>Trusted Service</h3>
+                    <div class="feature">
 
-                <p>
-                    100% verified luxury and pre-owned cars.
-                </p>
+                        <i class="bi bi-shield-check"></i>
 
-            </div>
+                        <h3>Trusted Service</h3>
 
-            <div class="feature">
+                        <p>
+                            100% verified luxury and pre-owned cars.
+                        </p>
 
-                <i class="fa-solid fa-money-check-dollar"></i>
+                    </div>
 
-                <h3>Easy Finance</h3>
+                </div>
 
-                <p>
-                    Flexible EMI and finance options available.
-                </p>
+                <div class="col-lg-3 col-md-6">
 
-            </div>
+                    <div class="feature">
 
-            <div class="feature">
+                        <i class="bi bi-cash-coin"></i>
 
-                <i class="fa-solid fa-car"></i>
+                        <h3>Easy Finance</h3>
 
-                <h3>Premium Collection</h3>
+                        <p>
+                            Flexible EMI and finance options available.
+                        </p>
 
-                <p>
-                    Latest luxury, sports and SUV vehicles.
-                </p>
+                    </div>
 
-            </div>
+                </div>
 
-            <div class="feature">
+                <div class="col-lg-3 col-md-6">
 
-                <i class="fa-solid fa-headset"></i>
+                    <div class="feature">
 
-                <h3>24/7 Support</h3>
+                        <i class="bi bi-car-front-fill"></i>
 
-                <p>
-                    Dedicated customer support anytime.
-                </p>
+                        <h3>Premium Collection</h3>
+
+                        <p>
+                            Latest luxury, sports and SUV vehicles.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+
+                    <div class="feature">
+
+                        <i class="bi bi-headset"></i>
+
+                        <h3>24/7 Support</h3>
+
+                        <p>
+                            Dedicated customer support anytime.
+                        </p>
+
+                    </div>
+
+                </div>
 
             </div>
 
         </div>
 
     </section>
-
-    <!-- GALLERY -->
 
     <section class="section gallery" id="gallery">
 
-        <h1 class="section-title">
-            CAR GALLERY
-        </h1>
+        <div class="container">
 
-        <div class="gallery-images">
+            <h1 class="section-title">
+                <i class="bi bi-images"></i>
+                CAR GALLERY
+            </h1>
 
-            <img src="https://images.unsplash.com/photo-1502877338535-766e1452684a?q=80&w=1200&auto=format&fit=crop">
+            <div class="row g-4 gallery-images">
 
-            <img src="https://images.unsplash.com/photo-1494905998402-395d579af36f?q=80&w=1200&auto=format&fit=crop">
+                <div class="col-lg-3 col-md-6">
+                    <img src="https://images.unsplash.com/photo-1502877338535-766e1452684a?q=80&w=1200&auto=format&fit=crop">
+                </div>
 
-            <img src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=1200&auto=format&fit=crop">
+                <div class="col-lg-3 col-md-6">
+                    <img src="https://images.unsplash.com/photo-1494905998402-395d579af36f?q=80&w=1200&auto=format&fit=crop">
+                </div>
 
-            <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=1200&auto=format&fit=crop">
+                <div class="col-lg-3 col-md-6">
+                    <img src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=1200&auto=format&fit=crop">
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=1200&auto=format&fit=crop">
+                </div>
+
+            </div>
 
         </div>
 
     </section>
-
-    <!-- TESTIMONIAL -->
 
     <section class="section testimonial">
 
-        <h1 class="section-title">
-            CUSTOMER REVIEW
-        </h1>
+        <div class="container">
 
-        <div class="testimonial-box">
+            <h1 class="section-title">
+                <i class="bi bi-chat-quote-fill"></i>
+                CUSTOMER REVIEW
+            </h1>
 
-            <i class="fa-solid fa-quote-left"></i>
+            <div class="testimonial-box">
 
-            <p>
-                Excellent service and premium car collection.
-                The buying process was smooth and professional.
-            </p>
+                <i class="bi bi-quote"></i>
 
-            <h3>
-                - Happy Customer
-            </h3>
+                <p>
+                    Excellent service and premium car collection.
+                    The buying process was smooth and professional.
+                </p>
+
+                <h3>
+                    <i class="bi bi-person-circle"></i>
+                    - Happy Customer
+                </h3>
+
+            </div>
 
         </div>
 
     </section>
-
-    <!-- PAYMENT SECTION -->
 
     <section class="payment" id="payment">
 
-        <h1 class="section-title">
-            PAYMENT DETAILS
-        </h1>
+        <div class="container">
 
-        <div class="payment-box">
+            <h1 class="section-title">
+                <i class="bi bi-credit-card-2-front-fill"></i>
+                PAYMENT DETAILS
+            </h1>
 
-            <input type="text"
-            id="name"
-            placeholder="Enter Full Name">
+            <div class="payment-box">
 
-            <input type="email"
-            id="email"
-            placeholder="Enter Email Address">
+                <input type="text" placeholder="Enter Full Name">
 
-            <input type="number"
-            id="amount"
-            placeholder="Enter Amount">
+                <input type="email" placeholder="Enter Email Address">
 
-            <select id="method">
+                <input type="number" placeholder="Enter Amount">
 
-                <option value="">
-                    Select Payment Method
-                </option>
+                <select>
 
-                <option>
-                    Credit Card
-                </option>
+                    <option>Select Payment Method</option>
 
-                <option>
-                    Debit Card
-                </option>
+                    <option>Credit Card</option>
 
-                <option>
-                    UPI
-                </option>
+                    <option>Debit Card</option>
 
-                <option>
-                    Net Banking
-                </option>
+                    <option>UPI</option>
 
-            </select>
+                    <option>Net Banking</option>
 
-            <button class="btn"
-            onclick="makePayment()">
+                </select>
 
-                Make Payment
+                <button class="btn-custom w-100">
+                    <i class="bi bi-wallet2"></i>
+                    Make Payment
+                </button>
 
-            </button>
+            </div>
 
         </div>
 
     </section>
-
-    <!-- ABOUT -->
 
     <section class="about" id="about">
 
-        <h1 class="section-title">
-            ABOUT US
-        </h1>
+        <div class="container">
 
-        <p>
-            Direct Automotive provides luxury and premium pre-owned cars
-            with trusted customer support and world-class service.
-            We deliver high quality vehicles with modern technology,
-            affordable finance options and excellent after-sales support.
-        </p>
+            <h1 class="section-title">
+                <i class="bi bi-info-circle-fill"></i>
+                ABOUT US
+            </h1>
+
+            <p>
+                Direct Automotive provides luxury and premium pre-owned cars
+                with trusted customer support and world-class service.
+                We deliver high quality vehicles with modern technology,
+                affordable finance options and excellent after-sales support.
+            </p>
+
+        </div>
 
     </section>
-
-    <!-- CONTACT -->
 
     <section class="contact" id="contact">
 
-        <h2>Contact Us</h2>
+        <div class="container">
 
-        <p>
-            <i class="fa-solid fa-phone"></i>
-            +91 7041021160
-        </p>
+            <h2>
+                <i class="bi bi-telephone-fill"></i>
+                Contact Us
+            </h2>
 
-        <p>
-            <i class="fa-solid fa-envelope"></i>
-            info@directautomotive.com
-        </p>
+            <p>
+                <i class="bi bi-telephone-fill"></i>
+                +91 7041021160
+            </p>
 
-        <p>
-            <i class="fa-solid fa-location-dot"></i>
-            Ahmedabad, Gujarat
-        </p>
+            <p>
+                <i class="bi bi-envelope-fill"></i>
+                info@directautomotive.com
+            </p>
+
+            <p>
+                <i class="bi bi-geo-alt-fill"></i>
+                Ahmedabad, Gujarat
+            </p>
+
+        </div>
 
     </section>
 
-    <!-- SETTINGS BUTTON -->
-
-    <button class="settings-btn"
-    onclick="openSettings()">
-
-        <i class="fa-solid fa-gear"></i>
-
-    </button>
-
-    <!-- SETTINGS MODAL -->
-
-    <div id="settingsModal"
-    class="modal">
-
-        <div class="modal-content">
-
-            <span class="close-btn"
-            onclick="closeSettings()">
-                &times;
-            </span>
-
-            <h1 style="text-align:center; color:red;">
-                SETTINGS PANEL
-            </h1>
-
-            <div class="setting-box">
-
-                <h3>
-                    <i class="fa-solid fa-user"></i>
-                    Profile Settings
-                </h3>
-
-                <input type="text"
-                placeholder="Enter Full Name">
-
-                <input type="email"
-                placeholder="Enter Email">
-
-                <input type="password"
-                placeholder="Enter Password">
-
-                <button class="btn"
-                onclick="alert('Profile Saved Successfully')">
-
-                    Save Profile
-
-                </button>
-
-            </div>
-
-            <div class="setting-box">
-
-                <h3>
-                    <i class="fa-solid fa-palette"></i>
-                    Appearance
-                </h3>
-
-                <button class="btn"
-                onclick="changeTheme('dark')">
-
-                    Dark Theme
-
-                </button>
-
-                <br><br>
-
-                <button class="btn"
-                onclick="changeTheme('light')">
-
-                    Light Theme
-
-                </button>
-
-                <br><br>
-
-                <button class="btn"
-                onclick="changeTheme('red')">
-
-                    Red Theme
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- CAR DETAILS MODAL -->
-
-    <div id="carModal"
-    class="modal">
-
-        <div class="modal-content">
-
-            <span class="close-btn"
-            onclick="closeModal()">
-                &times;
-            </span>
-
-            <h2 id="modalTitle"></h2>
-
-            <img id="modalImage">
-
-            <h3 id="modalPrice"></h3>
-
-            <p id="modalText"></p>
-
-        </div>
-
-    </div>
-
-    <!-- FOOTER -->
-
     <div class="footer">
 
-        © 2026 Direct Automotive | All Rights Reserved
+        <i class="bi bi-c-circle"></i>
+        2026 Direct Automotive | All Rights Reserved
 
     </div>
 
-    <!-- JAVASCRIPT -->
+    <!-- Floating Trigger Target -->
+    <button class="settings-floating" data-bs-toggle="modal" data-bs-target="#settingsModal">
+        <i class="bi bi-gear-fill"></i>
+    </button>
+
+    <!-- Camera Dashboard Settings Modal -->
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content modal-content-custom">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title" id="settingsModalLabel">
+                        <i class="bi bi-sliders text-danger"></i> Camera Settings Dashboard
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="settings-label"><i class="bi bi-circle-half"></i> Aperture</label>
+                            <select class="form-select" id="apertureSelect">
+                                <option value="f1.4">f/1.4 (Max Light / Shallow Depth)</option>
+                                <option value="f2.8" selected>f/2.8</option>
+                                <option value="f5.6">f/5.6</option>
+                                <option value="f11">f/11</option>
+                                <option value="f22">f/22 (Min Light / Deep Focus)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="settings-label"><i class="bi bi-speedometer"></i> Shutter Speed</label>
+                            <select class="form-select" id="shutterSelect">
+                                <option value="1/4000">1/4000s (Freeze Action)</option>
+                                <option value="1/1000" selected>1/1000s</option>
+                                <option value="1/250">1/250s</option>
+                                <option value="1/30">1/30s (Motion Blur)</option>
+                                <option value="1s">1s</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="settings-label"><i class="bi bi-brightness-high-fill"></i> ISO Speed</label>
+                            <select class="form-select" id="isoSelect">
+                                <option value="100" selected>ISO 100 (Clean / Less Noise)</option>
+                                <option value="400">ISO 400</option>
+                                <option value="1600">ISO 1600</option>
+                                <option value="3200">ISO 3200</option>
+                                <option value="6400">ISO 6400 (High Grain)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="settings-label"><i class="bi bi-sun-fill"></i> White Balance</label>
+                            <select class="form-select" id="wbSelect">
+                                <option value="auto" selected>Auto (AWB)</option>
+                                <option value="daylight">Daylight (5200K)</option>
+                                <option value="cloudy">Cloudy (6000K)</option>
+                                <option value="tungsten">Tungsten (3200K)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="settings-label"><i class="bi bi-person-bounding-box"></i> Focus Mode</label>
+                            <select class="form-select" id="focusSelect">
+                                <option value="af-s" selected>Single-Shot AF (Still Subjects)</option>
+                                <option value="af-c">Continuous AF (Moving Vehicles)</option>
+                                <option value="mf">Manual Focus</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="settings-label"><i class="bi bi-plus-minus-box"></i> Exposure Comp.</label>
+                            <select class="form-select" id="exposureSelect">
+                                <option value="+2">+2.0 EV</option>
+                                <option value="+1">+1.0 EV</option>
+                                <option value="0" selected>0.0 EV (Standard)</option>
+                                <option value="-1">-1.0 EV</option>
+                                <option value="-2">-2.0 EV</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer modal-footer-custom">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-custom" id="applySettingsBtn">Apply Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
+    <!-- ========================================== -->
+    <!-- DYNAMIC AUTHENTICATION MODALS (NEW INJECTION) -->
+    <!-- ========================================== -->
+
+    <!-- Registration Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-content-custom">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title"><i class="bi bi-person-plus-fill text-danger"></i> Create Account</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="registerForm">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="settings-label">Full Name</label>
+                            <input type="text" class="form-control" id="regName" required placeholder="John Doe">
+                        </div>
+                        <div class="mb-3">
+                            <label class="settings-label">Email Address</label>
+                            <input type="email" class="form-control" id="regEmail" required placeholder="name@example.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="settings-label">Password</label>
+                            <input type="password" class="form-control" id="regPassword" required placeholder="••••••••">
+                        </div>
+                    </div>
+                    <div class="modal-footer modal-footer-custom">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-custom">Sign Up</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-content-custom">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title"><i class="bi bi-box-arrow-in-right text-danger"></i> Member Login</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="loginForm">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="settings-label">Email Address</label>
+                            <input type="email" class="form-control" id="loginEmail" required placeholder="name@example.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="settings-label">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" required placeholder="••••••••">
+                        </div>
+                    </div>
+                    <div class="modal-footer modal-footer-custom">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-custom">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Bootstrap Core JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom Camera Setting Engine Script Integration -->
     <script>
-        /* AUTH SCREEN */
+        document.getElementById('applySettingsBtn').addEventListener('click', function() {
+            // Get selected variables from DOM inputs
+            const aperture = document.getElementById('apertureSelect').value;
+            const shutter = document.getElementById('shutterSelect').value;
+            const iso = document.getElementById('isoSelect').value;
+            const whiteBalance = document.getElementById('wbSelect').value;
+            const focusMode = document.getElementById('focusSelect').value;
+            const exposure = document.getElementById('exposureSelect').value;
 
-function showLogin(){
+            // 1. APERTURE CONTROLLER (Changes image background depth-of-field filters)
+            const slides = document.querySelectorAll('.slide');
+            let blurValue = "0px";
+            if (aperture === "f1.4") blurValue = "8px";
+            else if (aperture === "f2.8") blurValue = "3px";
+            else if (aperture === "f5.6") blurValue = "1px";
+            else if (aperture === "f11" || aperture === "f22") blurValue = "0px";
 
-    document.getElementById("registerBox")
-    .style.display = "none";
+            slides.forEach(slide => {
+                slide.style.filter = `blur(${blurValue})`;
+            });
 
-    document.getElementById("loginBox")
-    .style.display = "block";
-}
+            // 2. SHUTTER SPEED CONTROLLER (Changes timing loops for structural CSS sliders)
+            let duration = 15; // default 15s total cycle duration
+            if (shutter === "1/4000") duration = 3;   // Ultra speed cycle loop
+            else if (shutter === "1/1000") duration = 6;
+            else if (shutter === "1/250") duration = 12;
+            else if (shutter === "1/30") duration = 24;
+            else if (shutter === "1s") duration = 40;   // slow motion speed
 
-function showRegister(){
+            const delayStep1 = (duration / 3).toFixed(2) + "s";
+            const delayStep2 = ((duration / 3) * 2).toFixed(2) + "s";
 
-    document.getElementById("loginBox")
-    .style.display = "none";
+            document.documentElement.style.setProperty('--shutter-duration', `${duration}s`);
+            document.documentElement.style.setProperty('--delay-step-1', delayStep1);
+            document.documentElement.style.setProperty('--delay-step-2', delayStep2);
 
-    document.getElementById("registerBox")
-    .style.display = "block";
-}
+            // Restart animations to apply the new duration values smoothly
+            slides.forEach(slide => {
+                const prevAnimation = slide.style.animation;
+                slide.style.animation = 'none';
+                slide.offsetHeight; // Trigger reflow execution layout refresh
+                slide.style.animation = prevAnimation;
+            });
 
-function registerUser(){
+            // 3. ISO GRAIN GENERATOR
+            let grainOpacity = 0;
+            if (iso === "400") grainOpacity = 0.05;
+            else if (iso === "1600") grainOpacity = 0.15;
+            else if (iso === "3200") grainOpacity = 0.3;
+            else if (iso === "6400") grainOpacity = 0.55;
+            
+            // Set dynamic inline opacity style to the noise structural element sheet rule
+            document.body.style.setProperty('--grain-opacity', grainOpacity);
+            
+            // Apply rule programmatically to custom pseudo matching engine state using custom sheets override or stylesheet elements injection
+            let styleEl = document.getElementById('custom-iso-sheet');
+            if(!styleEl) {
+                styleEl = document.createElement('style');
+                styleEl.id = 'custom-iso-sheet';
+                document.head.appendChild(styleEl);
+            }
+            styleEl.innerHTML = `body::after { opacity: ${grainOpacity} !important; }`;
 
-    let name =
-    document.getElementById("registerName").value;
-
-    let email =
-    document.getElementById("registerEmail").value;
-
-    let password =
-    document.getElementById("registerPassword").value;
-
-    if(name === "" ||
-       email === "" ||
-       password === ""){
-
-        alert("Please Fill All Register Details");
-    }
-
-    else{
-
-        localStorage.setItem("userEmail", email);
-        localStorage.setItem("userPassword", password);
-
-        alert("Registration Successful");
-
-        showLogin();
-    }
-}
-
-function loginUser(){
-
-    let email =
-    document.getElementById("loginEmail").value;
-
-    let password =
-    document.getElementById("loginPassword").value;
-
-    let savedEmail =
-    localStorage.getItem("userEmail");
-
-    let savedPassword =
-    localStorage.getItem("userPassword");
-
-    if(email === savedEmail &&
-       password === savedPassword){
-
-        alert("Login Successful");
-
-        document.getElementById("authScreen")
-        .style.display = "none";
-    }
-
-    else{
-
-        alert("Invalid Email or Password");
-    }
-}
-
-        /* CAR DETAILS */
-
-        function showDetails(type){
-
-            let title =
-            document.getElementById("modalTitle");
-
-            let image =
-            document.getElementById("modalImage");
-
-            let price =
-            document.getElementById("modalPrice");
-
-            let text =
-            document.getElementById("modalText");
-
-            let modal =
-            document.getElementById("carModal");
-
-            if(type === "luxury"){
-
-                title.innerHTML =
-                "Mercedes-Benz S-Class";
-
-                image.src =
-                "https://images.unsplash.com/photo-1502877338535-766e1452684a?q=80&w=1200&auto=format&fit=crop";
-
-                price.innerHTML =
-                "Price : ₹1.80 Crore";
-
-                text.innerHTML =
-                "Luxury cars provide premium comfort and advanced technology.";
+            // 4. WHITE BALANCE TINTS
+            if (whiteBalance === "daylight") {
+                document.body.style.filter = "sepia(0.15) hue-rotate(10deg) saturate(1.1)";
+            } else if (whiteBalance === "cloudy") {
+                document.body.style.filter = "sepia(0.3) saturate(1.2)";
+            } else if (whiteBalance === "tungsten") {
+                document.body.style.filter = "hue-rotate(190deg) saturate(0.95) brightness(1.05)";
+            } else {
+                document.body.style.filter = "none"; // Reset to Auto
             }
 
-            else if(type === "sports"){
+            // 5. EXPOSURE COMPENSATION CONTROLLER (Alters structural opacity scales)
+            let globalBrightness = 1.0;
+            if (exposure === "+2") globalBrightness = 1.4;
+            else if (exposure === "+1") globalBrightness = 1.2;
+            document.body.style.filter += ` brightness(${globalBrightness})`;
 
-                title.innerHTML =
-                "Ferrari Sports Edition";
-
-                image.src =
-                "https://images.unsplash.com/photo-1494905998402-395d579af36f?q=80&w=1200&auto=format&fit=crop";
-
-                price.innerHTML =
-                "Price : ₹3.50 Crore";
-
-                text.innerHTML =
-                "Sports cars offer high speed and thrilling performance.";
+            // 6. FOCUS MODE INTERFACE ALERTS
+            if (focusMode === "af-c") {
+                console.log("Focus Tracking Mode: Tracking fast vehicles enabled.");
             }
 
-            else if(type === "suv"){
+            // Fire validation trigger modal success feedback
+            alert(`Camera Configurations Applied Successfully:\n• Aperture: ${aperture}\n• Shutter Loop Interval: ${shutter}\n• Grain Layer Opacity: ${iso}\n• White Balance Mode: ${whiteBalance}`);
+            
+            // Close bootstrap instance elements target modal natively
+            const modalElement = document.getElementById('settingsModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if(modalInstance) modalInstance.hide();
+        });
+    </script>
 
-                title.innerHTML =
-                "Range Rover Defender";
 
-                image.src =
-                "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=1200&auto=format&fit=crop";
+    <!-- ========================================== -->
+    <!-- AUTHENTICATION FUNCTIONALITY SCRIPT ENGINE -->
+    <!-- ========================================== -->
+    <script>
+        // Init Bootstrap modal control instances safely
+        const registerModalEl = new bootstrap.Modal(document.getElementById('registerModal'));
+        const loginModalEl = new bootstrap.Modal(document.getElementById('loginModal'));
 
-                price.innerHTML =
-                "Price : ₹95 Lakh";
+        // Bind Navbar layout native buttons to access control windows
+        document.getElementById('navRegisterBtn').addEventListener('click', () => registerModalEl.show());
+        document.getElementById('navLoginBtn').addEventListener('click', () => loginModalEl.show());
 
-                text.innerHTML =
-                "SUV vehicles are spacious and perfect for adventure.";
+        // Setup local processing structures
+        const registerForm = document.getElementById('registerForm');
+        const loginForm = document.getElementById('loginForm');
+        const authContainer = document.getElementById('navAuthContainer');
+
+        // Handle Form Registration Submissions
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            const password = document.getElementById('regPassword').value;
+
+            // Retrieve database or create a new instance 
+            let users = JSON.parse(localStorage.getItem('automotive_users')) || [];
+
+            // Detect matching duplicate account metrics
+            const userExists = users.some(user => user.email === email);
+            if (userExists) {
+                alert("An account with this email address already exists!");
+                return;
             }
 
-            modal.style.display = "block";
-        }
+            // Add new secure profile to the ecosystem array context
+            users.push({ name, email, password });
+            localStorage.setItem('automotive_users', JSON.stringify(users));
 
-        function closeModal(){
+            alert(`Registration successful, Welcome ${name}! You can now log in.`);
+            registerForm.reset();
+            registerModalEl.hide();
+            loginModalEl.show(); // transition window directly over
+        });
 
-            document.getElementById("carModal")
-            .style.display = "none";
-        }
+        // Handle Member Login Submissions
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+            const password = document.getElementById('loginPassword').value;
 
-        /* SETTINGS */
+            let users = JSON.parse(localStorage.getItem('automotive_users')) || [];
 
-        function openSettings(){
+            // Verification validation query logic
+            const validUser = users.find(user => user.email === email && user.password === password);
 
-            document.getElementById("settingsModal")
-            .style.display = "block";
-        }
-
-        function closeSettings(){
-
-            document.getElementById("settingsModal")
-            .style.display = "none";
-        }
-
-        /* PAYMENT */
-
-        function makePayment(){
-
-            let name =
-            document.getElementById("name").value;
-
-            let email =
-            document.getElementById("email").value;
-
-            let amount =
-            document.getElementById("amount").value;
-
-            let method =
-            document.getElementById("method").value;
-
-            if(name === "" ||
-               email === "" ||
-               amount === "" ||
-               method === ""){
-
-                alert("Please Fill All Payment Details");
-
+            if (validUser) {
+                alert(`Welcome back, ${validUser.name}! Secure Session Activated.`);
+                localStorage.setItem('current_logged_user', JSON.stringify(validUser));
+                updateNavbarState();
+                loginForm.reset();
+                loginModalEl.hide();
+            } else {
+                alert("Invalid email or password parameters. Please retry.");
             }
+        });
 
-            else{
+        // Dynamic Status Navigation bar modification routine updates
+        function updateNavbarState() {
+            const loggedUser = JSON.parse(localStorage.getItem('current_logged_user'));
+            
+            if (loggedUser) {
+                // Modify identity parameters layout view container cleanly
+                authContainer.innerHTML = `
+                    <span class="me-2 align-self-center text-white border-end pe-2" style="font-size:14px;">
+                        <i class="bi bi-person-check-fill text-danger"></i> Hi, ${loggedUser.name.split(' ')[0]}
+                    </span>
+                    <button class="btn-custom" id="navLogoutBtn" style="background:#333;">
+                        <i class="bi bi-box-arrow-left"></i> Log Out
+                    </button>
+                `;
 
-                alert(
-                "Payment Successful!\n\n" +
-                "Name : " + name +
-                "\nAmount : ₹" + amount +
-                "\nMethod : " + method
-                );
-
-                document.getElementById("name").value = "";
-                document.getElementById("email").value = "";
-                document.getElementById("amount").value = "";
-                document.getElementById("method").value = "";
+                // Connect modern custom action hooks
+                document.getElementById('navLogoutBtn').addEventListener('click', function() {
+                    localStorage.removeItem('current_logged_user');
+                    alert("Logged out successfully.");
+                    location.reload(); // reset engine state metrics mapping context safely
+                });
             }
         }
 
-        /* THEMES */
+        // Lock premium interactions down behind user state guards
+        document.querySelectorAll('.car-explore-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const loggedUser = localStorage.getItem('current_logged_user');
+                if (!loggedUser) {
+                    alert("🔒 Restricted Feature: Please log in or create an account to view deep premium collection specifications!");
+                    loginModalEl.show();
+                } else {
+                    alert("Access Granted! Fetching deep vehicle metrics sheets...");
+                }
+            });
+        });
 
-        function changeTheme(type){
-
-            if(type === "dark"){
-
-                document.body.style.background =
-                "#111";
-
-                document.body.style.color =
-                "white";
-            }
-
-            else if(type === "light"){
-
-                document.body.style.background =
-                "white";
-
-                document.body.style.color =
-                "black";
-            }
-
-            else if(type === "red"){
-
-                document.body.style.background =
-                "#3b0000";
-
-                document.body.style.color =
-                "white";
-            }
-
-            alert("Theme Changed Successfully");
-        }
-
-        /* CLOSE MODAL OUTSIDE CLICK */
-
-        window.onclick = function(event){
-
-            let carModal =
-            document.getElementById("carModal");
-
-            let settingsModal =
-            document.getElementById("settingsModal");
-
-            if(event.target == carModal){
-
-                carModal.style.display = "none";
-            }
-
-            if(event.target == settingsModal){
-
-                settingsModal.style.display = "none";
-            }
-        }
-
+        // Parse startup configuration runs to check persistent session tokens
+        document.addEventListener('DOMContentLoaded', updateNavbarState);
     </script>
 
 </body>
