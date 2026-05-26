@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorite Dish</title>
+</head>
+<body>
+
+    <h2>Enter YourFavorite Dish</h2>
+
+    <input type="text" id="dish" placeholder="Enter your favorite dish">
+
+    <button onclick="showDish()">Submit</button>
+
+    <script>
+        function showDish() {
+            let favDish = document.getElementById("dish").value;
+
+            alert("Your favorite dish is: " + favDish);
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Move Div</title>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+
+        #box1,#box2{
+            width:200px;
+            height:200px;
+            border:2px solid black;
+            margin:20px;
+            padding:20px;
+        }
+
+        .item{
+            width:100px;
+            height:100px;
+            background:red;
+            color:white;
+            text-align:center;
+            line-height:100px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div id="box1">
+
+        <div class="item">
+            BOX
+        </div>
+
+    </div>
+
+    <div id="box2"></div>
+
+    <button id="move">
+        Move Div
+    </button>
+
+    <script>
+
+        $("#move").click(function(){
+
+            $(".item").appendTo("#box2");
+
+        });
+
+    </script>
+
+</body>
+</html>

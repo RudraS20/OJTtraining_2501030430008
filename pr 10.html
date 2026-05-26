@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Registration Form</title>
+
+    <style>
+        body{
+            font-family:Arial;
+            background:#f4f4f4;
+        }
+
+        form{
+            width:300px;
+            margin:50px auto;
+            background:white;
+            padding:20px;
+            border-radius:10px;
+        }
+
+        input{
+            width:100%;
+            padding:10px;
+            margin:10px 0;
+        }
+
+        button{
+            width:100%;
+            padding:10px;
+            background:blue;
+            color:white;
+            border:none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form onsubmit="return validateForm()">
+
+        <h2>Register</h2>
+
+        <input type="text" id="name" placeholder="Enter Name">
+
+        <input type="email" id="email" placeholder="Enter Email">
+
+        <input type="password" id="password" placeholder="Enter Password">
+
+        <button type="submit">
+            Submit
+        </button>
+
+    </form>
+
+    <script>
+
+        function validateForm(){
+
+            let name = document.getElementById("name").value;
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+
+            if(name == "" || email == "" || password == ""){
+                alert("All fields are required");
+                return false;
+            }
+
+            alert("Registration Successful");
+            return true;
+        }
+
+    </script>
+
+</body>
+</html>

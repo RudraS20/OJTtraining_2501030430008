@@ -2,1335 +2,730 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Direct Automotive</title>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #111;
-            color: white;
-            overflow-x: hidden;
-            transition: 0.5s;
-            position: relative;
-        }
-
-        /* Dynamic Camera ISO Overlay Layer */
+        :root { --main-red: #d90429; --bg-dark: #0b0b0b; --card-bg: #1b1b1b; --text-gray: #ddd; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg-dark); color: white; overflow-x: hidden; transition: 0.5s; }
+        
+        /* ISO Overlay */
         body::after {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-            opacity: 0;
-            transition: opacity 0.4s ease;
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 9999; opacity: 0; transition: opacity 0.4s ease;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        img {
-            max-width: 100%;
-        }
+        /* Shared Box Styles */
+        .box-style { background: var(--card-bg); border-radius: 15px; padding: 25px; height: 100%; transition: 0.3s; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); color: white; position: relative; overflow: hidden; }
+        .box-style:hover { transform: translateY(-10px); border-color: var(--main-red); }
 
-        /* HERO SECTION */
-
-        .hero {
-            height: 100vh;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* SLIDER */
-
-        .slider {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
-
-        .slide {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-            opacity: 0;
-            /* Shutter speed variable defaults to 15s */
-            animation: slider var(--shutter-duration, 15s) infinite;
-            transition: filter 0.4s ease;
-        }
-
-        .slide:nth-child(1) {
-            background-image: url("https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1600&auto=format&fit=crop");
-            animation-delay: 0s;
-        }
-
-        .slide:nth-child(2) {
-            background-image: url("https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1600&auto=format&fit=crop");
-            /* Delays are automatically recalculated dynamically inside the JS engine */
-            animation-delay: var(--delay-step-1, 5s);
-        }
-
-        .slide:nth-child(3) {
-            background-image: url("https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1600&auto=format&fit=crop");
-            animation-delay: var(--delay-step-2, 10s);
-        }
-
+        /* Hero & Slider */
+        .hero { height: 100vh; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .slider { position: absolute; width: 100%; height: 100%; z-index: 0; }
+        .slide { position: absolute; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; animation: slider var(--shutter-duration, 15s) infinite; transition: filter 0.4s ease; }
+        .slide:nth-child(1) { background-image: url("https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1600&auto=format&fit=crop"); animation-delay: 0s; }
+        .slide:nth-child(2) { background-image: url("https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1600&auto=format&fit=crop"); animation-delay: var(--delay-step-1, 5s); }
+        .slide:nth-child(3) { background-image: url("https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1600&auto=format&fit=crop"); animation-delay: var(--delay-step-2, 10s); }
+        .hero::before { content: ""; position: absolute; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.3), var(--bg-dark)); z-index: 1; }
+        
         @keyframes slider {
-            0% {
-                opacity: 0;
-                transform: scale(1.1);
-            }
-
-            10% {
-                opacity: 1;
-            }
-
-            30% {
-                opacity: 1;
-            }
-
-            40% {
-                opacity: 0;
-            }
-
-            100% {
-                opacity: 0;
-            }
+            0% { opacity: 0; transform: scale(1.1); }
+            10% { opacity: 1; }
+            30% { opacity: 1; }
+            40% { opacity: 0; }
+            100% { opacity: 0; }
         }
 
-        .hero::before {
-            content: "";
-            position: absolute;
+        /* Navigation */
+        .navbar { width: 100%; padding: 15px 0; background: rgba(11, 11, 11, 0.9); backdrop-filter: blur(10px); position: fixed; top: 0; z-index: 1000; border-bottom: 1px solid #222; }
+        .logo { font-size: 24px; font-weight: 800; color: white; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .logo i { color: var(--main-red); }
+        .menu { list-style: none; display: flex; justify-content: center; gap: 25px; margin: 0; padding: 0; flex-wrap: wrap; }
+        .menu a { color: #ccc; text-decoration: none; font-size: 15px; font-weight: 500; transition: 0.3s; text-transform: uppercase; letter-spacing: 0.5px; }
+        .menu a:hover, .menu a.active { color: var(--main-red); }
+
+        /* Buttons & Inputs */
+        .btn-custom { background: var(--main-red); color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; transition: 0.3s; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; width: 100%; }
+        .btn-custom:hover { background: white; color: black; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
+        .form-control, .form-select { background: #252525 !important; color: white !important; border: 1px solid #444; border-radius: 8px; }
+        .form-control:focus, .form-select:focus { border-color: var(--main-red) !important; box-shadow: 0 0 0 4px rgba(217, 4, 41, 0.2) !important; background: #2a2a2a !important; }
+        
+        /* Components */
+        .hero-content { position: relative; z-index: 2; text-align: center; width: 100%; animation: fadeIn 1.5s ease; }
+        .section { padding: 100px 20px; position: relative; }
+        .section-title { text-align: center; font-size: 42px; margin-bottom: 50px; color: white; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
+        .section-title span { color: var(--main-red); }
+        
+        .card-img-wrapper { overflow: hidden; border-radius: 12px; margin: -25px -25px 20px -25px; }
+        .card img { width: calc(100% + 50px); height: 220px; object-fit: cover; transition: transform 0.6s ease; display: block; }
+        .box-style:hover img { transform: scale(1.1); }
+        
+        .feature i { font-size: 42px; color: var(--main-red); margin-bottom: 20px; display: inline-block; background: rgba(217, 4, 41, 0.1); padding: 20px; border-radius: 50%; }
+        
+        .gallery-img img { width: 100%; height: 280px; object-fit: cover; border-radius: 10px; transition: 0.4s; cursor: pointer; filter: grayscale(80%); }
+        .gallery-img img:hover { transform: scale(1.05); filter: grayscale(0%); z-index: 10; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+
+        /* --- TABLE STYLES (NEW) --- */
+        .table-responsive-custom { border-radius: 15px; overflow: hidden; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .custom-table { width: 100%; border-collapse: collapse; margin-bottom: 0; color: #ddd; }
+        .custom-table thead { background: #222; }
+        .custom-table th { padding: 20px; text-transform: uppercase; font-size: 13px; letter-spacing: 1px; color: var(--main-red); font-weight: 700; border: none; }
+        .custom-table td { padding: 18px 20px; border-bottom: 1px solid #2a2a2a; vertical-align: middle; background: var(--card-bg); transition: 0.2s; }
+        .custom-table tbody tr:hover td { background: #252525; color: white; }
+        .custom-table tbody tr:last-child td { border-bottom: none; }
+        
+        .badge-status { padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge-available { background: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.3); }
+        .badge-sold { background: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.3); }
+        .badge-reserved { background: rgba(241, 196, 15, 0.15); color: #f1c40f; border: 1px solid rgba(241, 196, 15, 0.3); }
+        /* -------------------------- */
+
+        /* Floating Settings */
+        .settings-floating { position: fixed; bottom: 30px; right: 30px; background: var(--main-red); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2000; border: none; transition: 0.4s; box-shadow: 0 5px 20px rgba(217, 4, 41, 0.4); }
+        .settings-floating:hover { background: white; color: black; transform: rotate(90deg) scale(1.1); }
+
+        /* Modals */
+        .modal-content-custom { background: #1b1b1b !important; color: white !important; border: 1px solid #333 !important; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
+        .modal-header-custom, .modal-footer-custom { border-color: #333 !important; }
+        
+        /* Payment Inputs */
+        .payment-box input::placeholder { color: #ff6b6b !important; opacity: 1 !important; font-weight: 600; letter-spacing: 0.5px; }
+        .payment-box input { color: #eee !important; }
+        .payment-box select option { background: #222; color: white; }
+
+        /* --- LOCATION & FOOTER STYLES --- */
+        footer { background: #080808; border-top: 1px solid #222; padding-top: 60px; margin-top: 50px; position: relative; }
+        
+        .map-container {
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 1;
-        }
-
-        /* NAVBAR */
-
-        .navbar {
-            width: 100%;
-            padding: 15px 0;
-            background: rgba(0, 0, 0, 0.85);
-            position: fixed;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .logo {
-            font-size: 30px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: white;
-        }
-
-        .logo i {
-            color: red;
-        }
-
-        .menu {
-            list-style: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 25px;
-            padding-left: 0;
-            margin-bottom: 0;
-            flex-wrap: wrap;
-        }
-
-        .menu a {
-            text-decoration: none;
-            color: white;
-            font-size: 18px;
-            transition: 0.3s;
-        }
-
-        .menu a:hover {
-            color: red;
-        }
-
-        /* BUTTONS */
-
-        .auth-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-custom {
-            padding: 12px 20px;
-            background: red;
-            border: none;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: 0.3s;
-            font-size: 16px;
-        }
-
-        .btn-custom:hover {
-            background: white;
-            color: black;
-        }
-
-        /* HERO CONTENT */
-
-        .content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            z-index: 2;
-            width: 100%;
-        }
-
-        .content h1 {
-            font-size: 70px;
-            margin-bottom: 20px;
-        }
-
-        .content p {
-            font-size: 25px;
-            margin-bottom: 30px;
-        }
-
-        /* SECTION */
-
-        .section {
-            padding: 100px 20px;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 50px;
-            margin-bottom: 60px;
-            color: red;
-        }
-
-        /* CARDS */
-
-        .card {
-            background: #1b1b1b;
+            height: 350px;
             border-radius: 15px;
             overflow: hidden;
-            transition: 0.4s;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-            border: none;
+            border: 1px solid #333;
+            position: relative;
+        }
+        
+        /* Dark Mode Filter for Google Maps */
+        .map-frame {
+            width: 100%;
             height: 100%;
-            color: white;
+            border: 0;
+            filter: invert(90%) hue-rotate(180deg) grayscale(20%) contrast(90%);
+            transition: filter 0.3s;
+        }
+        
+        .map-container:hover .map-frame {
+            filter: invert(92%) hue-rotate(180deg) grayscale(10%) contrast(100%);
         }
 
-        .card:hover {
-            transform: translateY(-10px) scale(1.03);
-        }
+        .footer-info-item { display: flex; align-items: start; margin-bottom: 25px; gap: 15px; }
+        .footer-info-item i { color: var(--main-red); font-size: 20px; margin-top: 3px; }
+        .footer-bottom { background: black; padding: 20px 0; margin-top: 60px; border-top: 1px solid #1a1a1a; }
 
-        .card img {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-        }
+        /* Toast Notifications */
+        .toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 10000; }
+        .custom-toast { background: rgba(27, 27, 27, 0.95); backdrop-filter: blur(5px); color: white; border-left: 4px solid var(--main-red); border-radius: 4px; padding: 15px 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 15px; opacity: 0; transform: translateY(20px); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; }
+        .custom-toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .custom-toast i { font-size: 24px; color: var(--main-red); }
 
-        .card-content {
-            padding: 25px;
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        .card-content h2 {
-            margin-bottom: 15px;
-        }
-
-        .card-content p {
-            color: #ddd;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-
-        .card button {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            background: red;
-            color: white;
-            cursor: pointer;
-            font-size: 17px;
-            border-radius: 5px;
-            transition: 0.3s;
-        }
-
-        .card button:hover {
-            background: white;
-            color: black;
-        }
-
-        /* FEATURES */
-
-        .features {
-            background: #181818;
-        }
-
-        .feature {
-            background: #222;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            transition: 0.4s;
-            height: 100%;
-        }
-
-        .feature:hover {
-            transform: translateY(-10px);
-        }
-
-        .feature i {
-            font-size: 50px;
-            color: red;
-            margin-bottom: 20px;
-        }
-
-        .feature h3 {
-            margin-bottom: 15px;
-        }
-
-        .feature p {
-            color: #ccc;
-            line-height: 1.7;
-        }
-
-        /* GALLERY */
-
-        .gallery-images img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            border-radius: 15px;
-            transition: 0.4s;
-        }
-
-        .gallery-images img:hover {
-            transform: scale(1.05);
-        }
-
-        /* TESTIMONIAL */
-
-        .testimonial {
-            background: #1b1b1b;
-            text-align: center;
-        }
-
-        .testimonial-box {
-            max-width: 800px;
-            margin: auto;
-            background: #222;
-            padding: 40px;
-            border-radius: 15px;
-        }
-
-        .testimonial-box i {
-            font-size: 50px;
-            color: red;
-            margin-bottom: 20px;
-        }
-
-        .testimonial-box p {
-            line-height: 1.8;
-            color: #ddd;
-            margin-bottom: 20px;
-        }
-
-        /* PAYMENT */
-
-        .payment {
-            background: #1b1b1b;
-            padding: 80px 20px;
-        }
-
-        .payment-box {
-            max-width: 500px;
-            margin: auto;
-            background: #222;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
-        }
-
-        .payment-box input,
-        .payment-box select {
-            width: 100%;
-            padding: 15px;
-            margin: 12px 0;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-
-        /* ABOUT */
-
-        .about {
-            background: #111;
-            padding: 80px 20px;
-            text-align: center;
-        }
-
-        .about p {
-            max-width: 900px;
-            margin: auto;
-            line-height: 1.8;
-            font-size: 20px;
-            color: #ddd;
-        }
-
-        /* CONTACT */
-
-        .contact {
-            background: #000;
-            text-align: center;
-            padding: 80px 20px;
-        }
-
-        .contact h2 {
-            font-size: 45px;
-            margin-bottom: 20px;
-        }
-
-        .contact p {
-            margin: 10px 0;
-            font-size: 20px;
-        }
-
-        /* FOOTER */
-
-        .footer {
-            background: #050505;
-            text-align: center;
-            color: #999;
-            padding: 20px;
-        }
-
-        /* FLOATING SETTINGS BUTTON */
-        .settings-floating {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: red;
-            color: white;
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
-            border: none;
-            z-index: 2000;
-            transition: all 0.4s ease-in-out;
-        }
-
-        .settings-floating:hover {
-            background: white;
-            color: black;
-            transform: rotate(90deg) scale(1.05);
-        }
-
-        /* SETTINGS MODAL CUSTOM STYLES */
-        .modal-content-custom {
-            background: #1b1b1b !important;
-            color: white !important;
-            border: 2px solid red !important;
-            border-radius: 15px !important;
-        }
-
-        .modal-header-custom {
-            border-bottom: 1px solid #333 !important;
-        }
-
-        .modal-footer-custom {
-            border-top: 1px solid #333 !important;
-        }
-
-        .settings-label {
-            color: #ccc;
-            font-size: 14px;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .settings-label i {
-            color: red;
-        }
-
-        .modal-body select,
-        .modal-body input {
-            background: #252525 !important;
-            color: white !important;
-            border: 1px solid #444 !important;
-        }
-
-        .modal-body select:focus,
-        .modal-body input:focus {
-            border-color: red !important;
-            box-shadow: 0 0 5px rgba(255, 0, 0, 0.5) !important;
-        }
-
-        /* RESPONSIVE */
-
+        /* Responsive */
         @media(max-width:768px) {
-
-            .content h1 {
-                font-size: 40px;
-            }
-
-            .content p {
-                font-size: 18px;
-            }
-
-            .section-title {
-                font-size: 35px;
-            }
-
-            .logo {
-                justify-content: center;
-                margin-bottom: 15px;
-            }
-
-            .auth-buttons {
-                justify-content: center;
-                margin-top: 15px;
-            }
-
-            .settings-floating {
-                bottom: 20px;
-                right: 20px;
-                width: 45px;
-                height: 45px;
-                font-size: 20px;
-            }
+            .hero-content h1 { font-size: 32px; } .hero-content p { font-size: 16px; }
+            .menu { gap: 10px; font-size: 12px; } .logo { justify-content: center; }
+            .section { padding: 60px 15px; }
+            .map-container { height: 250px; }
+            .custom-table th, .custom-table td { padding: 12px; font-size: 14px; }
         }
     </style>
-
-</head>
+ </head>
 
 <body>
 
+    <!-- HERO -->
     <div class="hero">
-
         <div class="slider">
-
-            <div class="slide"></div>
-            <div class="slide"></div>
-            <div class="slide"></div>
-
+            <div class="slide"></div><div class="slide"></div><div class="slide"></div>
         </div>
 
         <header class="navbar">
-
             <div class="container">
-
-                <div class="row align-items-center">
-
-                    <div class="col-lg-3 text-center text-lg-start">
-
-                        <div class="logo">
-
-                            <i class="bi bi-car-front-fill"></i>
-
-                            Direct Automotive
-
-                        </div>
-
+                <div class="row align-items-center g-3">
+                    <div class="col-md-3 text-center text-md-start">
+                        <div class="logo"><i class="bi bi-car-front-fill"></i> Direct Automotive</div>
                     </div>
-
-                    <div class="col-lg-6">
-
+                    <div class="col-md-6">
                         <ul class="menu">
-
-                            <li><a href="#"><i class="bi bi-house-fill"></i> Home</a></li>
-
+                            <li><a href="#" class="active"><i class="bi bi-house-fill"></i> Home</a></li>
                             <li><a href="#cars"><i class="bi bi-car-front-fill"></i> Cars</a></li>
-
+                            <li><a href="#specs"><i class="bi bi-table"></i> Specs</a></li>
                             <li><a href="#features"><i class="bi bi-stars"></i> Features</a></li>
-
                             <li><a href="#gallery"><i class="bi bi-images"></i> Gallery</a></li>
-
                             <li><a href="#payment"><i class="bi bi-credit-card-fill"></i> Payment</a></li>
-
-                            <li><a href="#about"><i class="bi bi-info-circle-fill"></i> About</a></li>
-
-                            <li><a href="#contact"><i class="bi bi-telephone-fill"></i> Contact</a></li>
-
+                            <li><a href="#location"><i class="bi bi-geo-alt-fill"></i> Location</a></li>
                         </ul>
-
                     </div>
-
-                    <div class="col-lg-3 text-center text-lg-end">
-
-                        <div class="auth-buttons" id="navAuthContainer">
-
-                            <!-- Connected dynamically via JavaScript below -->
-                            <button class="btn-custom" id="navRegisterBtn">
-                                <i class="bi bi-person-plus-fill"></i> Register
-                            </button>
-
-                            <button class="btn-custom" id="navLoginBtn">
-                                <i class="bi bi-box-arrow-in-right"></i> Login
-                            </button>
-
-                        </div>
-
+                    <div class="col-md-3 text-center text-md-end" id="navAuthContainer">
+                        <button class="btn-custom d-inline-block w-auto px-3" id="navRegisterBtn"><i class="bi bi-person-plus-fill"></i> Register</button>
+                        <button class="btn-custom d-inline-block w-auto px-3" id="navLoginBtn"><i class="bi bi-box-arrow-in-right"></i> Login</button>
                     </div>
-
                 </div>
-
             </div>
-
         </header>
 
-        <div class="content">
-
-            <div class="container">
-
-                <div class="row justify-content-center">
-
-                    <div class="col-lg-8">
-
-                        <h1>DIRECT AUTOMOTIVE</h1>
-
-                        <p>
-                            <i class="bi bi-lightning-charge-fill"></i>
-                            LUXURY & PRE-OWNED CARS
-                        </p>
-
-                        <button class="btn-custom" onclick="document.getElementById('cars').scrollIntoView()">
-
-                            <i class="bi bi-search"></i>
-                            Explore Cars
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
+        <div class="hero-content">
+            <h1 class="display-3 fw-bold text-uppercase">Direct <span style="color:var(--main-red)">Automotive</span></h1>
+            <p class="fs-4 mb-4 text-light"><i class="bi bi-lightning-charge-fill text-warning"></i> Premium Pre-Owned Luxury</p>
+            <button class="btn-custom w-auto px-5" onclick="document.getElementById('cars').scrollIntoView({behavior: 'smooth'})"><i class="bi bi-search"></i> Explore Inventory</button>
         </div>
-
     </div>
 
+    <!-- CARS -->
     <section class="section" id="cars">
-
         <div class="container">
-
-            <h1 class="section-title">
-                <i class="bi bi-car-front"></i>
-                OUR CAR COLLECTION
-            </h1>
-
+            <h2 class="section-title">Our <span>Collection</span></h2>
             <div class="row g-4">
-
-                <div class="col-lg-4 col-md-6">
-
-                    <div class="card">
-
-                        <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=1200&auto=format&fit=crop">
-
-                        <div class="card-content">
-
-                            <h2><i class="bi bi-gem"></i> Luxury Cars</h2>
-
-                            <p>
-                                Premium luxury vehicles with advanced technology.
-                            </p>
-
-                            <button class="car-explore-btn">
-                                <i class="bi bi-arrow-right-circle-fill"></i>
-                                View More
-                            </button>
-
+                <div class="col-md-4">
+                    <div class="box-style card">
+                        <div class="card-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=1200&auto=format&fit=crop" alt="Luxury">
                         </div>
-
+                        <h3><i class="bi bi-gem"></i> Luxury Line</h3>
+                        <p class="text-secondary">Experience the pinnacle of comfort and technology in our hand-picked luxury vehicles.</p>
+                        <button class="btn-custom car-explore-btn"><i class="bi bi-arrow-right-circle-fill"></i> View Models</button>
                     </div>
-
                 </div>
-
-                <div class="col-lg-4 col-md-6">
-
-                    <div class="card">
-
-                        <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1200&auto=format&fit=crop">
-
-                        <div class="card-content">
-
-                            <h2><i class="bi bi-speedometer2"></i> Sports Cars</h2>
-
-                            <p>
-                                Powerful sports cars with speed and performance.
-                            </p>
-
-                            <button class="car-explore-btn">
-                                <i class="bi bi-arrow-right-circle-fill"></i>
-                                View More
-                            </button>
-
+                <div class="col-md-4">
+                    <div class="box-style card">
+                        <div class="card-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1200&auto=format&fit=crop" alt="Sports">
                         </div>
-
+                        <h3><i class="bi bi-speedometer2"></i> Performance</h3>
+                        <p class="text-secondary">High-octane machines engineered for speed enthusiasts and track lovers.</p>
+                        <button class="btn-custom car-explore-btn"><i class="bi bi-arrow-right-circle-fill"></i> View Models</button>
                     </div>
-
                 </div>
-
-                <div class="col-lg-4 col-md-6">
-
-                    <div class="card">
-
-                        <img src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1200&auto=format&fit=crop">
-
-                        <div class="card-content">
-
-                            <h2><i class="bi bi-truck-front-fill"></i> SUV Collection</h2>
-
-                            <p>
-                                Stylish SUV collection for family and adventure.
-                            </p>
-
-                            <button class="car-explore-btn">
-                                <i class="bi bi-arrow-right-circle-fill"></i>
-                                View More
-                            </button>
-
+                <div class="col-md-4">
+                    <div class="box-style card">
+                        <div class="card-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1200&auto=format&fit=crop" alt="SUV">
                         </div>
-
+                        <h3><i class="bi bi-truck-front-fill"></i> SUV Fleet</h3>
+                        <p class="text-secondary">Command the road with our rugged yet sophisticated SUV collection.</p>
+                        <button class="btn-custom car-explore-btn"><i class="bi bi-arrow-right-circle-fill"></i> View Models</button>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
     </section>
 
-    <section class="section features" id="features">
-
+    <!-- SPECS TABLE (NEW SECTION) -->
+    <section class="section" id="specs">
         <div class="container">
+            <h2 class="section-title">Vehicle <span>Specifications</span></h2>
+            <div class="table-responsive-custom">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Engine</th>
+                            <th>0-60 mph</th>
+                            <th>Top Speed</th>
+                            <th>Power (HP)</th>
+                            <th>Price (USD)</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <img src="https://img.icons8.com/color/48/bmw.png" alt="Logo" width="30">
+                                    <span class="fw-bold">BMW M4 Comp</span>
+                                </div>
+                            </td>
+                            <td>3.0L Twin-Turbo I6</td>
+                            <td>3.8s</td>
+                            <td>180 mph</td>
+                            <td>503</td>
+                            <td class="text-white fw-bold">$74,000</td>
+                            <td><span class="badge-status badge-available">Available</span></td>
+                            <td><button class="btn btn-sm btn-outline-danger table-action-btn" data-model="BMW M4">Book Test Drive</button></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <img src="https://img.icons8.com/color/48/mercedes-benz.png" alt="Logo" width="30">
+                                    <span class="fw-bold">Mercedes AMG GT</span>
+                                </div>
+                            </td>
+                            <td>4.0L V8 Biturbo</td>
+                            <td>3.1s</td>
+                            <td>198 mph</td>
+                            <td>523</td>
+                            <td class="text-white fw-bold">$118,000</td>
+                            <td><span class="badge-status badge-reserved">Reserved</span></td>
+                            <td><button class="btn btn-sm btn-outline-secondary table-action-btn" disabled data-model="AMG GT">Waitlist</button></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <img src="https://img.icons8.com/color/48/audi.png" alt="Logo" width="30">
+                                    <span class="fw-bold">Audi RS7</span>
+                                </div>
+                            </td>
+                            <td>4.0L TFSI V8</td>
+                            <td>3.5s</td>
+                            <td>190 mph</td>
+                            <td>591</td>
+                            <td class="text-white fw-bold">$128,000</td>
+                            <td><span class="badge-status badge-sold">Sold Out</span></td>
+                            <td><button class="btn btn-sm btn-outline-secondary table-action-btn" disabled data-model="Audi RS7">Notify Me</button></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <img src="https://img.icons8.com/color/48/porsche.png" alt="Logo" width="30">
+                                    <span class="fw-bold">Porsche 911 Carrera</span>
+                                </div>
+                            </td>
+                            <td>3.0L Turbo Flat-6</td>
+                            <td>3.0s</td>
+                            <td>193 mph</td>
+                            <td>379</td>
+                            <td class="text-white fw-bold">$106,000</td>
+                            <td><span class="badge-status badge-available">Available</span></td>
+                            <td><button class="btn btn-sm btn-outline-danger table-action-btn" data-model="Porsche 911">Book Test Drive</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-center mt-3 text-secondary small">* Prices exclude taxes and fees. Subject to prior sale.</p>
+        </div>
+    </section>
 
-            <h1 class="section-title">
-                <i class="bi bi-award-fill"></i>
-                WHY CHOOSE US
-            </h1>
-
+    <!-- FEATURES -->
+    <section class="section features" id="features" style="background:#121212;">
+        <div class="container">
+            <h2 class="section-title">Why <span>Choose Us</span></h2>
             <div class="row g-4">
-
-                <div class="col-lg-3 col-md-6">
-
-                    <div class="feature">
-
+                <div class="col-md-3 col-6">
+                    <div class="box-style feature text-center">
                         <i class="bi bi-shield-check"></i>
-
-                        <h3>Trusted Service</h3>
-
-                        <p>
-                            100% verified luxury and pre-owned cars.
-                        </p>
-
+                        <h5>Certified</h5>
+                        <p class="small text-secondary">120-point inspection on every car.</p>
                     </div>
-
                 </div>
-
-                <div class="col-lg-3 col-md-6">
-
-                    <div class="feature">
-
+                <div class="col-md-3 col-6">
+                    <div class="box-style feature text-center">
                         <i class="bi bi-cash-coin"></i>
-
-                        <h3>Easy Finance</h3>
-
-                        <p>
-                            Flexible EMI and finance options available.
-                        </p>
-
+                        <h5>Financing</h5>
+                        <p class="small text-secondary">Instant approval with low rates.</p>
                     </div>
-
                 </div>
-
-                <div class="col-lg-3 col-md-6">
-
-                    <div class="feature">
-
+                <div class="col-md-3 col-6">
+                    <div class="box-style feature text-center">
                         <i class="bi bi-car-front-fill"></i>
-
-                        <h3>Premium Collection</h3>
-
-                        <p>
-                            Latest luxury, sports and SUV vehicles.
-                        </p>
-
+                        <h5>Warranty</h5>
+                        <p class="small text-secondary">1 Year comprehensive warranty.</p>
                     </div>
-
                 </div>
-
-                <div class="col-lg-3 col-md-6">
-
-                    <div class="feature">
-
+                <div class="col-md-3 col-6">
+                    <div class="box-style feature text-center">
                         <i class="bi bi-headset"></i>
+                        <h5>Support</h5>
+                        <p class="small text-secondary">24/7 roadside assistance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                        <h3>24/7 Support</h3>
+    <!-- GALLERY -->
+    <section class="section" id="gallery">
+        <div class="container">
+            <h2 class="section-title">Visual <span>Gallery</span></h2>
+            <div class="row g-4">
+                <div class="col-md-3 col-6 gallery-img"><img src="https://images.unsplash.com/photo-1502877338535-766e1452684a?q=80&w=800&auto=format&fit=crop"></div>
+                <div class="col-md-3 col-6 gallery-img"><img src="https://images.unsplash.com/photo-1494905998402-395d579af36f?q=80&w=800&auto=format&fit=crop"></div>
+                <div class="col-md-3 col-6 gallery-img"><img src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=800&auto=format&fit=crop"></div>
+                <div class="col-md-3 col-6 gallery-img"><img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=800&auto=format&fit=crop"></div>
+            </div>
+        </div>
+    </section>
 
-                        <p>
-                            Dedicated customer support anytime.
-                        </p>
+    <!-- TESTIMONIAL -->
+    <section class="section" style="background: linear-gradient(to top, #000, #1b1b1b);">
+        <div class="container">
+            <h2 class="section-title">Client <span>Stories</span></h2>
+            <div class="box-style testimonial-box text-center mx-auto" style="max-width: 800px; border-left: 5px solid var(--main-red);">
+                <i class="bi bi-quote fs-1 text-danger"></i>
+                <p class="fs-5 fst-italic my-4">"The team at Direct Automotive made buying my dream M4 an absolute breeze. The transparency in pricing and the condition of the car were flawless. Highly recommended!"</p>
+                <h5 class="mb-0 text-white">Rahul Verma</h5>
+                <small class="text-secondary">BMW M4 Owner</small>
+            </div>
+        </div>
+    </section>
 
+    <!-- PAYMENT -->
+    <section class="section payment" id="payment">
+        <div class="container">
+            <h2 class="section-title">Secure <span>Payment</span></h2>
+            <div class="box-style payment-box mx-auto" style="max-width: 500px; border-top: 4px solid var(--main-red);">
+                <form onsubmit="event.preventDefault(); showToast('Payment Gateway Simulation: Redirecting...', 'success');">
+                    <div class="mb-3">
+                        <label class="small text-secondary">Cardholder Name</label>
+                        <input type="text" class="form-control" placeholder="FULL NAME ON CARD" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="small text-secondary">Email</label>
+                        <input type="email" class="form-control" placeholder="YOUR@EMAIL.COM" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="small text-secondary">Amount (USD)</label>
+                        <input type="number" class="form-control" placeholder="0.00" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="small text-secondary">Method</label>
+                        <select class="form-select">
+                            <option value="" disabled selected>Select Payment Method</option>
+                            <option>Credit Card</option>
+                            <option>Debit Card</option>
+                            <option>Bank Transfer</option>
+                        </select>
+                    </div>
+                    <button class="btn-custom mt-2"><i class="bi bi-shield-lock-fill"></i> Pay Securely</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT & LOCATION SECTION (BOTTOM LAST) -->
+    <footer id="location">
+        <div class="container">
+            <div class="row g-5">
+                <!-- Info Column -->
+                <div class="col-lg-5">
+                    <div class="logo mb-4"><i class="bi bi-car-front-fill"></i> Direct Automotive</div>
+                    <p class="text-secondary mb-4">
+                        Your trusted partner for luxury and pre-owned vehicles. We bring global standards to Ahmedabad with a commitment to quality and transparency.
+                    </p>
+                    
+                    <h4 class="text-white mb-4 border-bottom border-secondary d-inline-block pb-2">Contact Details</h4>
+                    
+                    <div class="footer-info-item">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        <div>
+                            <h6 class="mb-1 text-white">Visit Our Showroom</h6>
+                            <p class="text-secondary small mb-0">SG Highway, Opp. Palladium Mall,<br>Ahmedabad, Gujarat 380058</p>
+                        </div>
                     </div>
 
+                    <div class="footer-info-item">
+                        <i class="bi bi-telephone-fill"></i>
+                        <div>
+                            <h6 class="mb-1 text-white">Call Us</h6>
+                            <p class="text-secondary small mb-0">+91 7041021160</p>
+                            <p class="text-secondary small mb-0">+91 9876543210</p>
+                        </div>
+                    </div>
+
+                    <div class="footer-info-item">
+                        <i class="bi bi-envelope-fill"></i>
+                        <div>
+                            <h6 class="mb-1 text-white">Email Support</h6>
+                            <p class="text-secondary small mb-0">info@directautomotive.com</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <a href="#" class="text-white me-3 fs-5"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-white me-3 fs-5"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-white me-3 fs-5"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="text-white fs-5"><i class="bi bi-youtube"></i></a>
+                    </div>
                 </div>
 
+                <!-- Map Column -->
+                <div class="col-lg-7">
+                    <h4 class="text-white mb-3">Locate Us</h4>
+                    <div class="map-container shadow-lg">
+                        <!-- Google Maps Embed for Ahmedabad -->
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d235014.2991879036!2d72.41492694188547!3d23.020158084530227!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e848aba5bd449%3A0x4fcedd11614f6516!2sAhmedabad%2C%20Gujarat!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
+                            class="map-frame" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                    <p class="text-center mt-2 text-secondary small"><i class="bi bi-mouse"></i> Interactive Map: Zoom to explore the area</p>
+                </div>
             </div>
-
         </div>
 
-    </section>
-
-    <section class="section gallery" id="gallery">
-
-        <div class="container">
-
-            <h1 class="section-title">
-                <i class="bi bi-images"></i>
-                CAR GALLERY
-            </h1>
-
-            <div class="row g-4 gallery-images">
-
-                <div class="col-lg-3 col-md-6">
-                    <img src="https://images.unsplash.com/photo-1502877338535-766e1452684a?q=80&w=1200&auto=format&fit=crop">
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <img src="https://images.unsplash.com/photo-1494905998402-395d579af36f?q=80&w=1200&auto=format&fit=crop">
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <img src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=1200&auto=format&fit=crop">
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=1200&auto=format&fit=crop">
-                </div>
-
+        <div class="footer-bottom">
+            <div class="container text-center">
+                <p class="mb-0 text-secondary small">&copy; 2026 Direct Automotive. All Rights Reserved. Designed with <i class="bi bi-heart-fill text-danger"></i> by AI.</p>
             </div>
-
         </div>
+    </footer>
 
-    </section>
+    <!-- SETTINGS BUTTON -->
+    <button class="settings-floating" data-bs-toggle="modal" data-bs-target="#settingsModal"><i class="bi bi-gear-fill fs-4"></i></button>
 
-    <section class="section testimonial">
-
-        <div class="container">
-
-            <h1 class="section-title">
-                <i class="bi bi-chat-quote-fill"></i>
-                CUSTOMER REVIEW
-            </h1>
-
-            <div class="testimonial-box">
-
-                <i class="bi bi-quote"></i>
-
-                <p>
-                    Excellent service and premium car collection.
-                    The buying process was smooth and professional.
-                </p>
-
-                <h3>
-                    <i class="bi bi-person-circle"></i>
-                    - Happy Customer
-                </h3>
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <section class="payment" id="payment">
-
-        <div class="container">
-
-            <h1 class="section-title">
-                <i class="bi bi-credit-card-2-front-fill"></i>
-                PAYMENT DETAILS
-            </h1>
-
-            <div class="payment-box">
-
-                <input type="text" placeholder="Enter Full Name">
-
-                <input type="email" placeholder="Enter Email Address">
-
-                <input type="number" placeholder="Enter Amount">
-
-                <select>
-
-                    <option>Select Payment Method</option>
-
-                    <option>Credit Card</option>
-
-                    <option>Debit Card</option>
-
-                    <option>UPI</option>
-
-                    <option>Net Banking</option>
-
-                </select>
-
-                <button class="btn-custom w-100">
-                    <i class="bi bi-wallet2"></i>
-                    Make Payment
-                </button>
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <section class="about" id="about">
-
-        <div class="container">
-
-            <h1 class="section-title">
-                <i class="bi bi-info-circle-fill"></i>
-                ABOUT US
-            </h1>
-
-            <p>
-                Direct Automotive provides luxury and premium pre-owned cars
-                with trusted customer support and world-class service.
-                We deliver high quality vehicles with modern technology,
-                affordable finance options and excellent after-sales support.
-            </p>
-
-        </div>
-
-    </section>
-
-    <section class="contact" id="contact">
-
-        <div class="container">
-
-            <h2>
-                <i class="bi bi-telephone-fill"></i>
-                Contact Us
-            </h2>
-
-            <p>
-                <i class="bi bi-telephone-fill"></i>
-                +91 7041021160
-            </p>
-
-            <p>
-                <i class="bi bi-envelope-fill"></i>
-                info@directautomotive.com
-            </p>
-
-            <p>
-                <i class="bi bi-geo-alt-fill"></i>
-                Ahmedabad, Gujarat
-            </p>
-
-        </div>
-
-    </section>
-
-    <div class="footer">
-
-        <i class="bi bi-c-circle"></i>
-        2026 Direct Automotive | All Rights Reserved
-
-    </div>
-
-    <!-- Floating Trigger Target -->
-    <button class="settings-floating" data-bs-toggle="modal" data-bs-target="#settingsModal">
-        <i class="bi bi-gear-fill"></i>
-    </button>
-
-    <!-- Camera Dashboard Settings Modal -->
-    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+    <!-- SETTINGS MODAL -->
+    <div class="modal fade" id="settingsModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content modal-content-custom">
                 <div class="modal-header modal-header-custom">
-                    <h5 class="modal-title" id="settingsModalLabel">
-                        <i class="bi bi-sliders text-danger"></i> Camera Settings Dashboard
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title"><i class="bi bi-sliders text-danger"></i> Camera Simulation Dashboard</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row g-3">
-                        <div class="col-md-4">
-                            <label class="settings-label"><i class="bi bi-circle-half"></i> Aperture</label>
-                            <select class="form-select" id="apertureSelect">
-                                <option value="f1.4">f/1.4 (Max Light / Shallow Depth)</option>
-                                <option value="f2.8" selected>f/2.8</option>
-                                <option value="f5.6">f/5.6</option>
-                                <option value="f11">f/11</option>
-                                <option value="f22">f/22 (Min Light / Deep Focus)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="settings-label"><i class="bi bi-speedometer"></i> Shutter Speed</label>
-                            <select class="form-select" id="shutterSelect">
-                                <option value="1/4000">1/4000s (Freeze Action)</option>
-                                <option value="1/1000" selected>1/1000s</option>
-                                <option value="1/250">1/250s</option>
-                                <option value="1/30">1/30s (Motion Blur)</option>
-                                <option value="1s">1s</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="settings-label"><i class="bi bi-brightness-high-fill"></i> ISO Speed</label>
-                            <select class="form-select" id="isoSelect">
-                                <option value="100" selected>ISO 100 (Clean / Less Noise)</option>
-                                <option value="400">ISO 400</option>
-                                <option value="1600">ISO 1600</option>
-                                <option value="3200">ISO 3200</option>
-                                <option value="6400">ISO 6400 (High Grain)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="settings-label"><i class="bi bi-sun-fill"></i> White Balance</label>
-                            <select class="form-select" id="wbSelect">
-                                <option value="auto" selected>Auto (AWB)</option>
-                                <option value="daylight">Daylight (5200K)</option>
-                                <option value="cloudy">Cloudy (6000K)</option>
-                                <option value="tungsten">Tungsten (3200K)</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="settings-label"><i class="bi bi-person-bounding-box"></i> Focus Mode</label>
-                            <select class="form-select" id="focusSelect">
-                                <option value="af-s" selected>Single-Shot AF (Still Subjects)</option>
-                                <option value="af-c">Continuous AF (Moving Vehicles)</option>
-                                <option value="mf">Manual Focus</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="settings-label"><i class="bi bi-plus-minus-box"></i> Exposure Comp.</label>
-                            <select class="form-select" id="exposureSelect">
-                                <option value="+2">+2.0 EV</option>
-                                <option value="+1">+1.0 EV</option>
-                                <option value="0" selected>0.0 EV (Standard)</option>
-                                <option value="-1">-1.0 EV</option>
-                                <option value="-2">-2.0 EV</option>
-                            </select>
-                        </div>
+                        <div class="col-md-4"><label class="small text-secondary">Aperture (Depth of Field)</label><select id="apertureSelect" class="form-select"><option value="f1.4">f/1.4 (Shallow)</option><option value="f2.8" selected>f/2.8 (Normal)</option><option value="f11">f/11 (Deep)</option><option value="f22">f/22 (Sharp)</option></select></div>
+                        <div class="col-md-4"><label class="small text-secondary">Shutter Speed (Duration)</label><select id="shutterSelect" class="form-select"><option value="1/4000">1/4000s (Fast)</option><option value="1/1000" selected>1/1000s</option><option value="1/250">1/250s</option><option value="1s">1s (Slow)</option></select></div>
+                        <div class="col-md-4"><label class="small text-secondary">ISO (Grain)</label><select id="isoSelect" class="form-select"><option value="100" selected>100 (Clean)</option><option value="400">400 (Light)</option><option value="1600">1600 (Visible)</option><option value="6400">6400 (Heavy)</option></select></div>
+                        <div class="col-md-4"><label class="small text-secondary">White Balance</label><select id="wbSelect" class="form-select"><option value="auto" selected>Auto</option><option value="daylight">Daylight (Warm)</option><option value="tungsten">Tungsten (Cool)</option></select></div>
+                        <div class="col-md-4"><label class="small text-secondary">Focus Mode</label><select id="focusSelect" class="form-select"><option value="af-s" selected>AF-S (Single)</option><option value="af-c">AF-C (Continuous)</option><option value="mf">MF (Manual)</option></select></div>
+                        <div class="col-md-4"><label class="small text-secondary">Exposure</label><select id="exposureSelect" class="form-select"><option value="+2">+2.0 EV (Bright)</option><option value="0" selected>0.0 EV (Normal)</option><option value="-2">-2.0 EV (Dark)</option></select></div>
                     </div>
                 </div>
                 <div class="modal-footer modal-footer-custom">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-custom" id="applySettingsBtn">Apply Settings</button>
+                    <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button class="btn-custom w-auto" id="applySettingsBtn">Apply Configuration</button>
                 </div>
             </div>
         </div>
     </div>
 
-
-    <!-- ========================================== -->
-    <!-- DYNAMIC AUTHENTICATION MODALS (NEW INJECTION) -->
-    <!-- ========================================== -->
-
-    <!-- Registration Modal -->
-    <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
+    <!-- REGISTER MODAL -->
+    <div class="modal fade" id="registerModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-custom">
                 <div class="modal-header modal-header-custom">
                     <h5 class="modal-title"><i class="bi bi-person-plus-fill text-danger"></i> Create Account</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <form id="registerForm">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="settings-label">Full Name</label>
-                            <input type="text" class="form-control" id="regName" required placeholder="John Doe">
+                            <label class="small text-secondary">Full Name</label>
+                            <input type="text" id="regName" class="form-control" placeholder="John Doe" required>
                         </div>
                         <div class="mb-3">
-                            <label class="settings-label">Email Address</label>
-                            <input type="email" class="form-control" id="regEmail" required placeholder="name@example.com">
+                            <label class="small text-secondary">Email Address</label>
+                            <input type="email" id="regEmail" class="form-control" placeholder="john@example.com" required>
                         </div>
                         <div class="mb-3">
-                            <label class="settings-label">Password</label>
-                            <input type="password" class="form-control" id="regPassword" required placeholder="••••••••">
+                            <label class="small text-secondary">Password</label>
+                            <input type="password" id="regPassword" class="form-control" placeholder="••••••••" required>
                         </div>
                     </div>
                     <div class="modal-footer modal-footer-custom">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-custom">Sign Up</button>
+                        <button type="submit" class="btn-custom w-auto">Sign Up</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Login Modal -->
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+    <!-- LOGIN MODAL -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-content-custom">
                 <div class="modal-header modal-header-custom">
                     <h5 class="modal-title"><i class="bi bi-box-arrow-in-right text-danger"></i> Member Login</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <form id="loginForm">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label class="settings-label">Email Address</label>
-                            <input type="email" class="form-control" id="loginEmail" required placeholder="name@example.com">
+                            <label class="small text-secondary">Email Address</label>
+                            <input type="email" id="loginEmail" class="form-control" placeholder="john@example.com" required>
                         </div>
                         <div class="mb-3">
-                            <label class="settings-label">Password</label>
-                            <input type="password" class="form-control" id="loginPassword" required placeholder="••••••••">
+                            <label class="small text-secondary">Password</label>
+                            <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
                         </div>
                     </div>
                     <div class="modal-footer modal-footer-custom">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-custom">Login</button>
+                        <button type="submit" class="btn-custom w-auto">Login</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
+    <!-- TOAST NOTIFICATION CONTAINER (Replaces native alerts) -->
+    <div class="toast-container">
+        <div id="customToast" class="custom-toast">
+            <i class="bi bi-info-circle-fill"></i>
+            <span id="toastMessage">Notification Message</span>
+        </div>
+    </div>
 
-    <!-- Bootstrap Core JS Bundle -->
+    <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Custom Camera Setting Engine Script Integration -->
     <script>
+        // --- UTILS: TOAST NOTIFICATION SYSTEM ---
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('customToast');
+            const msgSpan = document.getElementById('toastMessage');
+            const icon = toast.querySelector('i');
+            
+            msgSpan.textContent = message;
+            
+            // Icon switching
+            icon.className = 'bi';
+            if(type === 'success') icon.classList.add('bi-check-circle-fill');
+            else if(type === 'error') icon.classList.add('bi-exclamation-triangle-fill');
+            else icon.classList.add('bi-info-circle-fill');
+
+            toast.classList.add('show');
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // --- 1. SETTINGS ENGINE ---
         document.getElementById('applySettingsBtn').addEventListener('click', function() {
-            // Get selected variables from DOM inputs
-            const aperture = document.getElementById('apertureSelect').value;
-            const shutter = document.getElementById('shutterSelect').value;
-            const iso = document.getElementById('isoSelect').value;
-            const whiteBalance = document.getElementById('wbSelect').value;
-            const focusMode = document.getElementById('focusSelect').value;
-            const exposure = document.getElementById('exposureSelect').value;
-
-            // 1. APERTURE CONTROLLER (Changes image background depth-of-field filters)
+            const getVal = (id) => document.getElementById(id).value;
             const slides = document.querySelectorAll('.slide');
-            let blurValue = "0px";
-            if (aperture === "f1.4") blurValue = "8px";
-            else if (aperture === "f2.8") blurValue = "3px";
-            else if (aperture === "f5.6") blurValue = "1px";
-            else if (aperture === "f11" || aperture === "f22") blurValue = "0px";
 
-            slides.forEach(slide => {
-                slide.style.filter = `blur(${blurValue})`;
-            });
+            // 1. Aperture (Blur)
+            const blurMap = { 'f1.4': '6px', 'f2.8': '2px', 'f5.6': '0.5px', 'f11': '0px', 'f22': '0px' };
+            slides.forEach(s => s.style.filter = `blur(${blurMap[getVal('apertureSelect')] || '0px'})`);
 
-            // 2. SHUTTER SPEED CONTROLLER (Changes timing loops for structural CSS sliders)
-            let duration = 15; // default 15s total cycle duration
-            if (shutter === "1/4000") duration = 3;   // Ultra speed cycle loop
-            else if (shutter === "1/1000") duration = 6;
-            else if (shutter === "1/250") duration = 12;
-            else if (shutter === "1/30") duration = 24;
-            else if (shutter === "1s") duration = 40;   // slow motion speed
-
-            const delayStep1 = (duration / 3).toFixed(2) + "s";
-            const delayStep2 = ((duration / 3) * 2).toFixed(2) + "s";
-
-            document.documentElement.style.setProperty('--shutter-duration', `${duration}s`);
-            document.documentElement.style.setProperty('--delay-step-1', delayStep1);
-            document.documentElement.style.setProperty('--delay-step-2', delayStep2);
-
-            // Restart animations to apply the new duration values smoothly
-            slides.forEach(slide => {
-                const prevAnimation = slide.style.animation;
-                slide.style.animation = 'none';
-                slide.offsetHeight; // Trigger reflow execution layout refresh
-                slide.style.animation = prevAnimation;
-            });
-
-            // 3. ISO GRAIN GENERATOR
-            let grainOpacity = 0;
-            if (iso === "400") grainOpacity = 0.05;
-            else if (iso === "1600") grainOpacity = 0.15;
-            else if (iso === "3200") grainOpacity = 0.3;
-            else if (iso === "6400") grainOpacity = 0.55;
+            // 2. Shutter (Speed)
+            const durationMap = { '1/4000': 3, '1/1000': 8, '1/250': 15, '1/30': 25, '1s': 40 };
+            const dur = durationMap[getVal('shutterSelect')] || 15;
+            document.documentElement.style.setProperty('--shutter-duration', `${dur}s`);
+            document.documentElement.style.setProperty('--delay-step-1', `${(dur/3).toFixed(2)}s`);
+            document.documentElement.style.setProperty('--delay-step-2', `${((dur/3)*2).toFixed(2)}s`);
             
-            // Set dynamic inline opacity style to the noise structural element sheet rule
-            document.body.style.setProperty('--grain-opacity', grainOpacity);
-            
-            // Apply rule programmatically to custom pseudo matching engine state using custom sheets override or stylesheet elements injection
-            let styleEl = document.getElementById('custom-iso-sheet');
-            if(!styleEl) {
-                styleEl = document.createElement('style');
-                styleEl.id = 'custom-iso-sheet';
-                document.head.appendChild(styleEl);
-            }
-            styleEl.innerHTML = `body::after { opacity: ${grainOpacity} !important; }`;
+            // Force Animation Reflow
+            slides.forEach(s => { s.style.animation = 'none'; s.offsetHeight; s.style.animation = null; });
 
-            // 4. WHITE BALANCE TINTS
-            if (whiteBalance === "daylight") {
-                document.body.style.filter = "sepia(0.15) hue-rotate(10deg) saturate(1.1)";
-            } else if (whiteBalance === "cloudy") {
-                document.body.style.filter = "sepia(0.3) saturate(1.2)";
-            } else if (whiteBalance === "tungsten") {
-                document.body.style.filter = "hue-rotate(190deg) saturate(0.95) brightness(1.05)";
-            } else {
-                document.body.style.filter = "none"; // Reset to Auto
-            }
+            // 3. ISO (Grain)
+            const isoMap = { '100': 0, '400': 0.05, '1600': 0.2, '6400': 0.5 };
+            let style = document.getElementById('iso-style') || (document.head.appendChild(document.createElement('style')).id = 'iso-style');
+            style.innerHTML = `body::after { opacity: ${isoMap[getVal('isoSelect')] || 0} !important; }`;
 
-            // 5. EXPOSURE COMPENSATION CONTROLLER (Alters structural opacity scales)
-            let globalBrightness = 1.0;
-            if (exposure === "+2") globalBrightness = 1.4;
-            else if (exposure === "+1") globalBrightness = 1.2;
-            document.body.style.filter += ` brightness(${globalBrightness})`;
+            // 4. WB & Exposure (Tint & Brightness)
+            const wb = getVal('wbSelect');
+            const wbFilter = wb === 'daylight' ? 'sepia(0.2) saturate(1.2)' : wb === 'tungsten' ? 'hue-rotate(200deg) saturate(0.8)' : 'none';
+            const exp = getVal('exposureSelect');
+            const brightness = exp === '+2' ? 1.3 : exp === '-2' ? 0.7 : 1;
+            document.body.style.filter = `${wbFilter} brightness(${brightness})`;
 
-            // 6. FOCUS MODE INTERFACE ALERTS
-            if (focusMode === "af-c") {
-                console.log("Focus Tracking Mode: Tracking fast vehicles enabled.");
-            }
-
-            // Fire validation trigger modal success feedback
-            alert(`Camera Configurations Applied Successfully:\n• Aperture: ${aperture}\n• Shutter Loop Interval: ${shutter}\n• Grain Layer Opacity: ${iso}\n• White Balance Mode: ${whiteBalance}`);
-            
-            // Close bootstrap instance elements target modal natively
-            const modalElement = document.getElementById('settingsModal');
-            const modalInstance = bootstrap.Modal.getInstance(modalElement);
-            if(modalInstance) modalInstance.hide();
+            showToast(`Settings Applied: Aperture ${getVal('apertureSelect')} | ISO ${getVal('isoSelect')}`, 'success');
+            bootstrap.Modal.getInstance(document.getElementById('settingsModal')).hide();
         });
-    </script>
 
-
-    <!-- ========================================== -->
-    <!-- AUTHENTICATION FUNCTIONALITY SCRIPT ENGINE -->
-    <!-- ========================================== -->
-    <script>
-        // Init Bootstrap modal control instances safely
-        const registerModalEl = new bootstrap.Modal(document.getElementById('registerModal'));
-        const loginModalEl = new bootstrap.Modal(document.getElementById('loginModal'));
-
-        // Bind Navbar layout native buttons to access control windows
-        document.getElementById('navRegisterBtn').addEventListener('click', () => registerModalEl.show());
-        document.getElementById('navLoginBtn').addEventListener('click', () => loginModalEl.show());
-
-        // Setup local processing structures
-        const registerForm = document.getElementById('registerForm');
-        const loginForm = document.getElementById('loginForm');
+        // --- 2. AUTHENTICATION ---
+        const registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+        const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
         const authContainer = document.getElementById('navAuthContainer');
 
-        // Handle Form Registration Submissions
-        registerForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('regName').value.trim();
-            const email = document.getElementById('regEmail').value.trim().toLowerCase();
-            const password = document.getElementById('regPassword').value;
+        document.getElementById('navRegisterBtn').onclick = () => registerModal.show();
+        document.getElementById('navLoginBtn').onclick = () => loginModal.show();
 
-            // Retrieve database or create a new instance 
-            let users = JSON.parse(localStorage.getItem('automotive_users')) || [];
-
-            // Detect matching duplicate account metrics
-            const userExists = users.some(user => user.email === email);
-            if (userExists) {
-                alert("An account with this email address already exists!");
-                return;
-            }
-
-            // Add new secure profile to the ecosystem array context
-            users.push({ name, email, password });
-            localStorage.setItem('automotive_users', JSON.stringify(users));
-
-            alert(`Registration successful, Welcome ${name}! You can now log in.`);
-            registerForm.reset();
-            registerModalEl.hide();
-            loginModalEl.show(); // transition window directly over
-        });
-
-        // Handle Member Login Submissions
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-            const password = document.getElementById('loginPassword').value;
-
-            let users = JSON.parse(localStorage.getItem('automotive_users')) || [];
-
-            // Verification validation query logic
-            const validUser = users.find(user => user.email === email && user.password === password);
-
-            if (validUser) {
-                alert(`Welcome back, ${validUser.name}! Secure Session Activated.`);
-                localStorage.setItem('current_logged_user', JSON.stringify(validUser));
-                updateNavbarState();
-                loginForm.reset();
-                loginModalEl.hide();
-            } else {
-                alert("Invalid email or password parameters. Please retry.");
-            }
-        });
-
-        // Dynamic Status Navigation bar modification routine updates
-        function updateNavbarState() {
-            const loggedUser = JSON.parse(localStorage.getItem('current_logged_user'));
-            
-            if (loggedUser) {
-                // Modify identity parameters layout view container cleanly
+        function updateNav() {
+            const user = JSON.parse(localStorage.getItem('current_logged_user'));
+            if(user) {
                 authContainer.innerHTML = `
-                    <span class="me-2 align-self-center text-white border-end pe-2" style="font-size:14px;">
-                        <i class="bi bi-person-check-fill text-danger"></i> Hi, ${loggedUser.name.split(' ')[0]}
+                    <span class="text-white me-2 d-none d-md-inline border-end pe-2 text-end">
+                        <small class="d-block text-secondary" style="font-size: 10px;">WELCOME BACK</small>
+                        ${user.name.split(' ')[0]}
                     </span>
-                    <button class="btn-custom" id="navLogoutBtn" style="background:#333;">
-                        <i class="bi bi-box-arrow-left"></i> Log Out
-                    </button>
-                `;
-
-                // Connect modern custom action hooks
-                document.getElementById('navLogoutBtn').addEventListener('click', function() {
-                    localStorage.removeItem('current_logged_user');
-                    alert("Logged out successfully.");
-                    location.reload(); // reset engine state metrics mapping context safely
-                });
+                    <button class="btn-custom w-auto bg-secondary border-0" id="logoutBtn"><i class="bi bi-box-arrow-left"></i> Logout</button>`;
+                document.getElementById('logoutBtn').onclick = () => { 
+                    localStorage.removeItem('current_logged_user'); 
+                    location.reload(); 
+                };
             }
         }
 
-        // Lock premium interactions down behind user state guards
-        document.querySelectorAll('.car-explore-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const loggedUser = localStorage.getItem('current_logged_user');
-                if (!loggedUser) {
-                    alert("🔒 Restricted Feature: Please log in or create an account to view deep premium collection specifications!");
-                    loginModalEl.show();
-                } else {
-                    alert("Access Granted! Fetching deep vehicle metrics sheets...");
-                }
+        document.getElementById('registerForm').onsubmit = (e) => {
+            e.preventDefault();
+            const users = JSON.parse(localStorage.getItem('automotive_users')) || [];
+            const email = document.getElementById('regEmail').value.toLowerCase();
+            
+            if (users.find(u => u.email === email)) {
+                showToast("Email already registered!", 'error');
+                return;
+            }
+            
+            users.push({ 
+                name: document.getElementById('regName').value, 
+                email, 
+                password: document.getElementById('regPassword').value 
             });
+            localStorage.setItem('automotive_users', JSON.stringify(users));
+            showToast("Registration Successful! Please Login.", 'success');
+            registerModal.hide();
+            loginModal.show();
+        };
+
+        document.getElementById('loginForm').onsubmit = (e) => {
+            e.preventDefault();
+            const users = JSON.parse(localStorage.getItem('automotive_users')) || [];
+            const email = document.getElementById('loginEmail').value.toLowerCase();
+            const user = users.find(u => u.email === email && u.password === document.getElementById('loginPassword').value);
+            
+            if (user) {
+                localStorage.setItem('current_logged_user', JSON.stringify(user));
+                showToast(`Welcome back, ${user.name}!`, 'success');
+                updateNav();
+                loginModal.hide();
+            } else {
+                showToast("Invalid Email or Password.", 'error');
+            }
+        };
+
+        // Lock explore buttons
+        document.querySelectorAll('.car-explore-btn').forEach(btn => {
+            btn.onclick = () => localStorage.getItem('current_logged_user') 
+                ? showToast("Access Granted: Loading Inventory...", 'success') 
+                : (showToast("Members Only. Please Login.", 'error'), loginModal.show());
+        });
+        
+        // --- 3. TABLE BUTTONS LOGIC ---
+        document.querySelectorAll('.table-action-btn').forEach(btn => {
+            if(btn.disabled) return;
+            btn.onclick = function() {
+                const model = this.getAttribute('data-model');
+                if (localStorage.getItem('current_logged_user')) {
+                    showToast(`Test Drive Request Sent for ${model}!`, 'success');
+                } else {
+                    showToast("Login required to book test drive.", 'error');
+                    loginModal.show();
+                }
+            }
         });
 
-        // Parse startup configuration runs to check persistent session tokens
-        document.addEventListener('DOMContentLoaded', updateNavbarState);
+        // Init
+        updateNav();
+
+        // Smooth Scroll for Menu Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
     </script>
-
 </body>
-
 </html>
