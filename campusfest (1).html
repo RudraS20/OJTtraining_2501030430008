@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CampusFest.dev — Where Campus Comes Alive</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            accent:     '#e8ff47',
+            accent2:    '#ff6b35',
+            accent3:    '#7c3aed',
+            campusbg:   '#0a0a08',
+            surface:    '#111110',
+            campuscard: 'rgba(24,24,21,0.5)',
+            border:     '#2a2a26',
+            campustext: '#f0ede6',
+            muted:      '#8a8780',
+          },
+          fontFamily: {
+            syne: ['Syne', 'sans-serif'],
+            mono: ['"DM Mono"', 'monospace'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --bg:#0a0a08; --surface:#111110; --card:#18181580; --border:#2a2a26;
+      --accent:#e8ff47; --accent2:#ff6b35; --text:#f0ede6; --muted:#8a8780;
+    }
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; }
+    body { background:var(--bg); color:var(--text); font-family:'DM Mono',monospace; overflow-x:hidden; cursor:none; }
+
+    /* ── Cursor ── */
+    #cursor { width:12px;height:12px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s,width .2s,height .2s,background .2s; }
+    #cursor-ring { width:36px;height:36px;border:1.5px solid rgba(232,255,71,.5);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .18s ease,width .25s,height .25s,border-color .2s; }
+    body:has(a:hover) #cursor, body:has(button:hover) #cursor { width:20px;height:20px; }
+    body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring { width:52px;height:52px;border-color:var(--accent2); }
+
+    /* ── Noise overlay ── */
+    body::before { content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9000;opacity:.6; }
+
+    /* ── Hero ── */
+    .hero-grid-bg { position:absolute;inset:0;background-image:linear-gradient(rgba(232,255,71,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(232,255,71,.04) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 40%,transparent 100%); }
+    .hero-orb { position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none; }
+    .orb1 { width:600px;height:600px;background:rgba(124,58,237,.18);top:-100px;right:-100px; }
+    .orb2 { width:400px;height:400px;background:rgba(232,255,71,.08);bottom:0;left:-60px; }
+    .orb3 { width:300px;height:300px;background:rgba(255,107,53,.1);top:40%;right:30%; }
+
+    .hero-tag::before { content:'●';font-size:.5rem;animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .hero-title { font-family:'Syne',sans-serif;font-size:clamp(3.5rem,9vw,7.5rem);font-weight:800;line-height:.92;letter-spacing:-.04em;max-width:900px;opacity:0;animation:fadeUp .7s .35s ease forwards; }
+    .hero-title em { font-style:normal;font-family:'Instrument Serif',serif;color:var(--accent); }
+    .hero-title .outline { -webkit-text-stroke:1.5px rgba(240,237,230,.25);color:transparent; }
+    .stat-num { font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;letter-spacing:-.04em;color:var(--text); }
+    .stat-num span { color:var(--accent); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── Marquee ── */
+    .marquee-track { animation:marquee 28s linear infinite;width:max-content; }
+    .marquee-item .dot { width:6px;height:6px;background:var(--accent);border-radius:50%;flex-shrink:0; }
+    @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    /* ── Section ── */
+    .section-label::before { content:'';display:block;width:24px;height:1px;background:var(--accent); }
+    .section-title { font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:800;letter-spacing:-.03em;line-height:1.05;max-width:640px; }
+    .section-title em { font-style:italic;font-family:'Instrument Serif',serif;color:var(--accent); }
+
+    /* ── Event cards ── */
+    .event-card { opacity:0;transform:translateY(20px);transition:transform .25s,border-color .25s,box-shadow .25s; }
+    .event-card.visible { opacity:1;transform:translateY(0);transition:opacity .5s ease,transform .5s ease,border-color .25s,box-shadow .25s; }
+    .event-card:hover { transform:translateY(-6px);border-color:rgba(232,255,71,.3);box-shadow:0 24px 48px rgba(0,0,0,.4),0 0 0 1px rgba(232,255,71,.1); }
+    .btn-sm:hover { background:var(--accent);color:#0a0a08;border-color:var(--accent); }
+
+    /* ── Timeline ── */
+    .timeline::before { content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,var(--border),transparent); }
+    .day-label { font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:24px;padding-left:28px;position:relative; }
+    .day-label::before { content:'';position:absolute;left:-4px;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent); }
+    .timeline-item:hover { transform:translateX(6px); }
+    .timeline-item:hover .t-content { border-color:rgba(232,255,71,.25); }
+    .t-name { font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:-.01em;margin-bottom:4px; }
+    .t-loc { font-size:.72rem;color:var(--muted); }
+    .t-tag { display:inline-block;margin-top:8px;padding:2px 8px;border-radius:3px;font-size:.63rem;letter-spacing:.06em;text-transform:uppercase; }
+    .tag-music { background:rgba(124,58,237,.2);color:#c084fc; }
+    .tag-tech  { background:rgba(232,255,71,.12);color:var(--accent); }
+    .tag-art   { background:rgba(255,107,53,.15);color:#fb923c; }
+    .tag-food  { background:rgba(74,222,128,.12);color:#4ade80; }
+    .tag-sport { background:rgba(56,189,248,.12);color:#38bdf8; }
+
+    /* ── Speaker cards ── */
+    .speaker-card { opacity:0;transform:translateY(20px);transition:transform .25s,border-color .25s; }
+    .speaker-card.visible { opacity:1;transform:translateY(0);transition:opacity .5s ease,transform .5s ease,border-color .25s; }
+    .speaker-card:hover { transform:translateY(-6px);border-color:rgba(232,255,71,.2); }
+    .speaker-name { font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;letter-spacing:-.01em;margin-bottom:4px; }
+    .speaker-role { font-size:.72rem;color:var(--muted); }
+
+    /* ── Toast ── */
+    #toast { position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--accent);color:#0a0a08;padding:12px 24px;border-radius:100px;font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;z-index:9990;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .3s;opacity:0;pointer-events:none; }
+    #toast.show { transform:translateX(-50%) translateY(0);opacity:1; }
+
+    /* ── Inputs focus ── */
+    .form-input:focus,.form-select:focus { border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,255,71,.1);outline:none; }
+    .form-select option { background:#1a1a16; }
+
+    /* ── Success ── */
+    .success-msg { display:none;text-align:center;padding:32px; }
+    .success-msg h3 { font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--accent);margin-bottom:8px; }
+    .success-msg p { color:var(--muted);font-size:.85rem; }
+  </style>
+</head>
+<body>
+
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+  <div id="toast">🎉 You're registered!</div>
+
+  <!-- ════ NAV (Tailwind) ════ -->
+  <nav id="navbar"
+    class="fixed top-0 left-0 right-0 z-[100]
+           flex items-center justify-between
+           px-12 py-5 backdrop-blur-xl
+           border-b border-transparent transition-all duration-300">
+
+    <a href="#" class="font-syne font-extrabold text-xl tracking-tight text-campustext no-underline">
+      Campus<span class="text-accent">Fest</span>.dev
+    </a>
+
+    <ul class="hidden md:flex gap-8 list-none items-center">
+      <li><a href="#events"   class="text-muted no-underline text-xs uppercase tracking-widest transition-colors duration-200 hover:text-campustext">Events</a></li>
+      <li><a href="#schedule" class="text-muted no-underline text-xs uppercase tracking-widest transition-colors duration-200 hover:text-campustext">Schedule</a></li>
+      <li><a href="#speakers" class="text-muted no-underline text-xs uppercase tracking-widest transition-colors duration-200 hover:text-campustext">Speakers</a></li>
+      <li><a href="#venue"    class="text-muted no-underline text-xs uppercase tracking-widest transition-colors duration-200 hover:text-campustext">Venue</a></li>
+      <li>
+        <button id="navRegister"
+          class="bg-accent text-campusbg font-syne font-semibold text-xs uppercase tracking-wider
+                 px-5 py-2.5 rounded cursor-none border-none
+                 transition-all duration-150 hover:-translate-y-0.5
+                 hover:shadow-[0_8px_24px_rgba(232,255,71,0.3)]">
+          Register Now →
+        </button>
+      </li>
+    </ul>
+
+    <button id="mobileMenuBtn" class="md:hidden flex flex-col gap-1.5 cursor-none p-2">
+      <span class="block w-6 h-px bg-campustext transition-all duration-300" id="bar1"></span>
+      <span class="block w-6 h-px bg-campustext transition-all duration-300" id="bar2"></span>
+      <span class="block w-4 h-px bg-accent   transition-all duration-300" id="bar3"></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Drawer -->
+  <div id="mobileMenu"
+    class="fixed inset-0 z-[99] bg-campusbg/95 backdrop-blur-xl
+           flex flex-col items-center justify-center gap-8
+           translate-x-full transition-transform duration-300 ease-in-out md:hidden">
+    <a href="#events"   id="mLink1" class="font-syne font-bold text-3xl text-campustext hover:text-accent transition-colors">Events</a>
+    <a href="#schedule" id="mLink2" class="font-syne font-bold text-3xl text-campustext hover:text-accent transition-colors">Schedule</a>
+    <a href="#speakers" id="mLink3" class="font-syne font-bold text-3xl text-campustext hover:text-accent transition-colors">Speakers</a>
+    <a href="#venue"    id="mLink4" class="font-syne font-bold text-3xl text-campustext hover:text-accent transition-colors">Venue</a>
+    <button id="mobileRegister"
+      class="mt-4 bg-accent text-campusbg font-syne font-bold text-base uppercase tracking-wider
+             px-8 py-3 rounded-md cursor-none border-none
+             hover:shadow-[0_16px_40px_rgba(232,255,71,0.35)] transition-all duration-150">
+      Get Your Pass →
+    </button>
+  </div>
+
+  <!-- ════ HERO ════ -->
+  <section id="hero"
+    class="min-h-screen relative flex flex-col justify-center items-start
+           px-12 pt-[120px] pb-20 overflow-hidden">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-orb orb1"></div>
+    <div class="hero-orb orb2"></div>
+    <div class="hero-orb orb3"></div>
+
+    <!-- Tag -->
+    <div class="hero-tag inline-flex items-center gap-2
+                bg-[rgba(232,255,71,0.08)] border border-[rgba(232,255,71,0.2)]
+                text-accent px-4 py-1.5 rounded-full
+                text-[0.72rem] tracking-[0.1em] uppercase mb-7
+                opacity-0 [animation:fadeUp_0.6s_0.2s_ease_forwards]">
+      Annual Campus Fest 2025 · Sept 19–21
+    </div>
+
+    <h1 class="hero-title">
+      Where<br><em>campus</em><br><span class="outline">comes alive.</span>
+    </h1>
+
+    <p class="mt-7 max-w-[480px] text-muted text-[0.9rem] leading-7
+              opacity-0 [animation:fadeUp_0.7s_0.5s_ease_forwards]">
+      Three days of electrifying performances, cutting-edge tech talks,
+      art installations, cultural showcases &amp; unforgettable memories.
+    </p>
+
+    <!-- CTA row -->
+    <div class="mt-11 flex items-center gap-4
+                opacity-0 [animation:fadeUp_0.7s_0.65s_ease_forwards]">
+      <button id="heroRegister"
+        class="inline-flex items-center gap-2
+               bg-accent text-campusbg font-syne font-bold text-[0.9rem] tracking-tight
+               px-8 py-3.5 rounded-md border-none cursor-none
+               transition-all duration-150
+               hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(232,255,71,0.35)]">
+        Get Your Pass ↗
+      </button>
+      <a href="#events"
+         class="flex items-center gap-2 text-muted text-[0.85rem]
+                transition-colors duration-200 hover:text-campustext no-underline cursor-none">
+        ↓ <span class="underline underline-offset-4">Explore Events</span>
+      </a>
+    </div>
+
+    <!-- Stats -->
+    <div class="absolute bottom-[60px] right-12 flex gap-12
+                opacity-0 [animation:fadeUp_0.7s_0.8s_ease_forwards]">
+      <div class="text-right">
+        <div class="stat-num" data-target="60"><span>0</span>+</div>
+        <div class="text-[0.7rem] text-muted tracking-[0.08em] uppercase mt-0.5">Events</div>
+      </div>
+      <div class="text-right">
+        <div class="stat-num" data-target="24"><span>0</span>+</div>
+        <div class="text-[0.7rem] text-muted tracking-[0.08em] uppercase mt-0.5">Speakers</div>
+      </div>
+      <div class="text-right">
+        <div class="stat-num" data-target="5000"><span>0</span>+</div>
+        <div class="text-[0.7rem] text-muted tracking-[0.08em] uppercase mt-0.5">Attendees</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ MARQUEE ════ -->
+  <div class="border-t border-b border-border py-4 overflow-hidden bg-surface">
+    <div class="marquee-track flex gap-0" id="marquee"></div>
+  </div>
+
+  <!-- ════ EVENTS ════ -->
+  <section id="events" class="py-24 px-12 bg-surface">
+    <!-- Header row -->
+    <div class="flex justify-between items-end flex-wrap gap-5 mb-14">
+      <div>
+        <div class="section-label flex items-center gap-2.5 text-[0.7rem] tracking-[0.15em] uppercase text-accent mb-4">
+          Featured Events
+        </div>
+        <h2 class="section-title">Every moment, <em>designed</em> to inspire.</h2>
+      </div>
+      <!-- Filter tabs -->
+      <div id="filterTabs" class="flex gap-2 flex-wrap">
+        <button class="tab active" data-filter="all">All</button>
+        <button class="tab" data-filter="music">Music</button>
+        <button class="tab" data-filter="tech">Tech</button>
+        <button class="tab" data-filter="art">Art</button>
+        <button class="tab" data-filter="sport">Sports</button>
+        <button class="tab" data-filter="food">Food</button>
+      </div>
+    </div>
+    <div id="eventsGrid"
+      class="grid gap-5"
+      style="grid-template-columns:repeat(auto-fill,minmax(320px,1fr))">
+    </div>
+  </section>
+
+  <!-- ════ SCHEDULE ════ -->
+  <section id="schedule" class="py-24 px-12 bg-campusbg">
+    <div class="section-label flex items-center gap-2.5 text-[0.7rem] tracking-[0.15em] uppercase text-accent mb-4">
+      Full Programme
+    </div>
+    <h2 class="section-title">Three days of <em>non-stop</em> action.</h2>
+    <div class="timeline relative max-w-[760px] mx-auto mt-14" id="timeline"></div>
+  </section>
+
+  <!-- ════ SPEAKERS ════ -->
+  <section id="speakers" class="py-24 px-12 bg-surface">
+    <div class="section-label flex items-center gap-2.5 text-[0.7rem] tracking-[0.15em] uppercase text-accent mb-4">
+      Keynote Speakers
+    </div>
+    <h2 class="section-title">Minds that will <em>move</em> you.</h2>
+    <div id="speakersGrid"
+      class="grid gap-6 mt-14"
+      style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr))">
+    </div>
+  </section>
+
+  <!-- ════ REGISTER ════ -->
+  <section id="register" class="py-24 px-12 bg-campusbg">
+    <div class="max-w-[640px] mx-auto text-center">
+      <!-- Label centred -->
+      <div class="flex justify-center items-center gap-2.5 text-[0.7rem] tracking-[0.15em] uppercase text-accent mb-4">
+        Get Your Pass
+      </div>
+      <h2 class="section-title mx-auto">Reserve your <em>spot</em> now.</h2>
+
+      <div class="mt-12 bg-campuscard border border-border rounded-2xl p-10">
+        <div id="regForm">
+          <!-- Name row -->
+          <div class="grid grid-cols-2 gap-4 mb-5">
+            <div class="text-left">
+              <label class="block text-[0.7rem] tracking-[0.08em] uppercase text-muted mb-2" for="fname">First Name</label>
+              <input class="form-input w-full px-4 py-3 bg-white/[0.04] border border-border rounded-md text-campustext font-mono text-[0.85rem] transition-all duration-200 cursor-none" id="fname" type="text" placeholder="Alex"/>
+            </div>
+            <div class="text-left">
+              <label class="block text-[0.7rem] tracking-[0.08em] uppercase text-muted mb-2" for="lname">Last Name</label>
+              <input class="form-input w-full px-4 py-3 bg-white/[0.04] border border-border rounded-md text-campustext font-mono text-[0.85rem] transition-all duration-200 cursor-none" id="lname" type="text" placeholder="Johnson"/>
+            </div>
+          </div>
+          <!-- Email -->
+          <div class="mb-5 text-left">
+            <label class="block text-[0.7rem] tracking-[0.08em] uppercase text-muted mb-2" for="email">College Email</label>
+            <input class="form-input w-full px-4 py-3 bg-white/[0.04] border border-border rounded-md text-campustext font-mono text-[0.85rem] transition-all duration-200 cursor-none" id="email" type="email" placeholder="alex@college.edu"/>
+          </div>
+          <!-- College + Pass row -->
+          <div class="grid grid-cols-2 gap-4 mb-5">
+            <div class="text-left">
+              <label class="block text-[0.7rem] tracking-[0.08em] uppercase text-muted mb-2" for="college">College / University</label>
+              <input class="form-input w-full px-4 py-3 bg-white/[0.04] border border-border rounded-md text-campustext font-mono text-[0.85rem] transition-all duration-200 cursor-none" id="college" type="text" placeholder="State University"/>
+            </div>
+            <div class="text-left">
+              <label class="block text-[0.7rem] tracking-[0.08em] uppercase text-muted mb-2" for="passType">Pass Type</label>
+              <select class="form-select w-full px-4 py-3 bg-white/[0.04] border border-border rounded-md text-campustext font-mono text-[0.85rem] transition-all duration-200 cursor-none" id="passType">
+                <option value="">Select pass…</option>
+                <option value="day1">Day 1 Only — ₹199</option>
+                <option value="day2">Day 2 Only — ₹199</option>
+                <option value="day3">Day 3 Only — ₹199</option>
+                <option value="full">Full Fest Pass — ₹499</option>
+                <option value="vip">VIP All-Access — ₹999</option>
+              </select>
+            </div>
+          </div>
+          <button id="formSubmit"
+            class="w-full py-4 mt-2 bg-accent text-campusbg font-syne font-bold text-base
+                   rounded-md border-none cursor-none
+                   transition-all duration-150
+                   hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(232,255,71,0.35)]">
+            Confirm Registration →
+          </button>
+          <p class="text-[0.7rem] text-muted mt-3.5 text-center">🔒 Your info is safe. No spam, ever.</p>
+        </div>
+        <div class="success-msg" id="successMsg">
+          <div class="text-5xl mb-4">🎟️</div>
+          <h3>You're In!</h3>
+          <p>Check your email for your confirmation &amp; QR code.<br>See you at CampusFest 2025!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ VENUE ════ -->
+  <section id="venue" class="py-24 px-12 bg-surface">
+    <div class="section-label flex items-center gap-2.5 text-[0.7rem] tracking-[0.15em] uppercase text-accent mb-4">
+      Venue
+    </div>
+    <h2 class="section-title">The <em>heart</em> of campus.</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-14 items-center">
+      <!-- Map -->
+      <div class="aspect-[4/3] rounded-xl border border-border overflow-hidden relative bg-[#0e1a0e]">
+        <svg class="w-full h-full" viewBox="0 0 500 375" xmlns="http://www.w3.org/2000/svg">
+          <rect width="500" height="375" fill="#0d1a0e"/>
+          <rect x="40" y="40" width="420" height="295" rx="4" fill="none" stroke="#1e3020" stroke-width="1"/>
+          <rect x="0" y="175" width="500" height="24" fill="#1a2a1a"/>
+          <rect x="230" y="0" width="24" height="375" fill="#1a2a1a"/>
+          <rect x="64" y="64" width="144" height="100" rx="4" fill="#0f2010"/>
+          <rect x="64" y="204" width="144" height="100" rx="4" fill="#0f2010"/>
+          <rect x="292" y="64" width="144" height="100" rx="4" fill="#0f2010"/>
+          <rect x="292" y="204" width="144" height="100" rx="4" fill="#0f2010"/>
+          <rect x="84" y="74" width="104" height="80" rx="3" fill="#162b18" stroke="#4ade80" stroke-width="1"/>
+          <text x="136" y="116" text-anchor="middle" fill="#4ade80" font-size="9" font-family="monospace">🎵 MAIN STAGE</text>
+          <rect x="312" y="74" width="104" height="80" rx="3" fill="#1e2614" stroke="#e8ff47" stroke-width="1"/>
+          <text x="364" y="116" text-anchor="middle" fill="#e8ff47" font-size="9" font-family="monospace">💻 TECH HUB</text>
+          <rect x="84" y="214" width="104" height="80" rx="3" fill="#1e1614" stroke="#fb923c" stroke-width="1"/>
+          <text x="136" y="256" text-anchor="middle" fill="#fb923c" font-size="9" font-family="monospace">🎨 ART ZONE</text>
+          <rect x="312" y="214" width="104" height="80" rx="3" fill="#141e14" stroke="#4ade80" stroke-width="1"/>
+          <text x="364" y="256" text-anchor="middle" fill="#4ade80" font-size="9" font-family="monospace">🍔 FOOD COURT</text>
+          <circle cx="242" cy="187" r="14" fill="rgba(232,255,71,0.15)" stroke="#e8ff47" stroke-width="1.5"/>
+          <text x="242" y="192" text-anchor="middle" fill="#e8ff47" font-size="12">📍</text>
+          <text x="30" y="170" fill="#2a3f2a" font-size="7" font-family="monospace" transform="rotate(-90,30,170)">CAMPUS RD</text>
+          <text x="215" y="20" fill="#2a3f2a" font-size="7" font-family="monospace">COLLEGE AVE</text>
+        </svg>
+      </div>
+
+      <!-- Info -->
+      <div>
+        <h3 class="font-syne font-extrabold text-[1.6rem] tracking-tight mb-4">Central Campus Grounds</h3>
+
+        <div class="flex items-start gap-3 mb-3 text-[0.82rem] text-muted">
+          <span class="text-base flex-shrink-0 mt-0.5">📍</span>
+          <span>Main Quad, State University Campus, College Avenue, City — 380001</span>
+        </div>
+        <div class="flex items-start gap-3 mb-3 text-[0.82rem] text-muted">
+          <span class="text-base flex-shrink-0 mt-0.5">🗓️</span>
+          <span>September 19–21, 2025 · Gates open 9:00 AM daily</span>
+        </div>
+        <div class="flex items-start gap-3 mb-3 text-[0.82rem] text-muted">
+          <span class="text-base flex-shrink-0 mt-0.5">🚌</span>
+          <span>Free shuttle from Central Station every 20 mins during the fest</span>
+        </div>
+        <div class="flex items-start gap-3 mb-3 text-[0.82rem] text-muted">
+          <span class="text-base flex-shrink-0 mt-0.5">🅿️</span>
+          <span>Parking available at Lot C &amp; D (₹50/day). Carpooling encouraged!</span>
+        </div>
+
+        <div class="flex flex-wrap gap-2 mt-6">
+          <span class="px-3.5 py-1.5 rounded-full border border-border text-[0.72rem] text-muted">🎵 Main Stage</span>
+          <span class="px-3.5 py-1.5 rounded-full border border-border text-[0.72rem] text-muted">💻 Tech Hub</span>
+          <span class="px-3.5 py-1.5 rounded-full border border-border text-[0.72rem] text-muted">🎨 Art Gallery</span>
+          <span class="px-3.5 py-1.5 rounded-full border border-border text-[0.72rem] text-muted">🍔 Food Court</span>
+          <span class="px-3.5 py-1.5 rounded-full border border-border text-[0.72rem] text-muted">🏆 Sports Arena</span>
+          <span class="px-3.5 py-1.5 rounded-full border border-border text-[0.72rem] text-muted">♿ Accessible</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ FOOTER ════ -->
+  <footer class="bg-surface border-t border-border pt-16 px-12 pb-8">
+    <!-- Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1fr] gap-12 pb-12 border-b border-border">
+      <div>
+        <a href="#" class="font-syne font-extrabold text-xl tracking-tight text-campustext no-underline">
+          Campus<span class="text-accent">Fest</span>.dev
+        </a>
+        <p class="text-muted text-[0.8rem] leading-7 mt-3 max-w-[240px]">
+          The biggest annual campus celebration — music, technology, art, food, and community all in one place.
+        </p>
+      </div>
+      <div>
+        <h4 class="font-syne font-bold text-[0.8rem] tracking-[0.08em] uppercase mb-4">Explore</h4>
+        <ul class="list-none flex flex-col gap-2.5">
+          <li><a href="#events"   class="text-muted no-underline text-[0.8rem] transition-colors duration-200 hover:text-campustext">Events</a></li>
+          <li><a href="#schedule" class="text-muted no-underline text-[0.8rem] transition-colors duration-200 hover:text-campustext">Schedule</a></li>
+          <li><a href="#speakers" class="text-muted no-underline text-[0.8rem] transition-colors duration-200 hover:text-campustext">Speakers</a></li>
+          <li><a href="#venue"    class="text-muted no-underline text-[0.8rem] transition-colors duration-200 hover:text-campustext">Venue</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-syne font-bold text-[0.8rem] tracking-[0.08em] uppercase mb-4">Info</h4>
+        <ul class="list-none flex flex-col gap-2.5">
+          <li><a href="#" class="text-muted no-underline text-[0.8rem] transition-colors duration-200 hover:text-campustext">Volunteer</a></li>
+          <li><a href="#" class="text-muted no-underline text-[0.8rem] transition-colors duration-200 hover:text-campustext">Sponsor Us</a></li>
+          <li><a href="#" class="text-muted no-underline text-[0.8rem] transition-colors duration-200 hover:text-campustext">Press Kit</a></li>
+          <li><a href="#" class="text-muted no-underline text-[0.8rem] transition-colors duration-200 hover:text-campustext">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-syne font-bold text-[0.8rem] tracking-[0.08em] uppercase mb-4">Socials</h4>
+        <ul class="list-none flex flex-col gap-2.5">
+          <li><a href="#" class="text-muted no-underline text-[0.8rem] transition-colors duration-200 hover:text-campustext">Instagram</a></li>
+          <li><a href="#" class="text-muted no-underline text-[0.8rem] transition-colors duration-200 hover:text-campustext">Twitter / X</a></li>
+          <li><a href="#" class="text-muted no-underline text-[0.8rem] transition-colors duration-200 hover:text-campustext">LinkedIn</a></li>
+          <li><a href="#" class="text-muted no-underline text-[0.8rem] transition-colors duration-200 hover:text-campustext">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="flex flex-col md:flex-row justify-between items-center gap-4 pt-7 text-[0.72rem] text-muted">
+      <span>© 2025 <b class="text-accent">CampusFest.dev</b> — Made with ❤️ by students, for students.</span>
+      <div class="flex gap-4">
+        <a href="#" class="text-muted no-underline text-[0.72rem] tracking-[0.06em] transition-colors duration-200 hover:text-accent">Privacy</a>
+        <a href="#" class="text-muted no-underline text-[0.72rem] tracking-[0.06em] transition-colors duration-200 hover:text-accent">Terms</a>
+        <a href="#" class="text-muted no-underline text-[0.72rem] tracking-[0.06em] transition-colors duration-200 hover:text-accent">FAQ</a>
+      </div>
+    </div>
+  </footer>
+
+<script>
+$(document).ready(function () {
+
+  /* ── Cursor ── */
+  $(document).on('mousemove', function (e) {
+    $('#cursor').css({ left: e.clientX, top: e.clientY });
+    setTimeout(() => $('#cursor-ring').css({ left: e.clientX, top: e.clientY }), 60);
+  });
+
+  /* ── Nav scroll ── */
+  $(window).on('scroll', function () {
+    if ($(this).scrollTop() > 60) {
+      $('#navbar').addClass('border-[#2a2a26] bg-[rgba(10,10,8,0.85)]').removeClass('border-transparent');
+    } else {
+      $('#navbar').removeClass('border-[#2a2a26] bg-[rgba(10,10,8,0.85)]').addClass('border-transparent');
+    }
+  });
+
+  /* ── Mobile menu ── */
+  let menuOpen = false;
+  $('#mobileMenuBtn').on('click', function () {
+    menuOpen = !menuOpen;
+    if (menuOpen) {
+      $('#mobileMenu').removeClass('translate-x-full').addClass('translate-x-0');
+      $('#bar1').addClass('rotate-45 translate-y-2');
+      $('#bar2').addClass('opacity-0');
+      $('#bar3').addClass('-rotate-45 -translate-y-2 w-6');
+    } else {
+      $('#mobileMenu').addClass('translate-x-full').removeClass('translate-x-0');
+      $('#bar1').removeClass('rotate-45 translate-y-2');
+      $('#bar2').removeClass('opacity-0');
+      $('#bar3').removeClass('-rotate-45 -translate-y-2 w-6');
+    }
+  });
+  $('#mobileMenu a, #mobileRegister').on('click', function () {
+    menuOpen = false;
+    $('#mobileMenu').addClass('translate-x-full').removeClass('translate-x-0');
+    $('#bar1').removeClass('rotate-45 translate-y-2');
+    $('#bar2').removeClass('opacity-0');
+    $('#bar3').removeClass('-rotate-45 -translate-y-2 w-6');
+  });
+  $('#mobileRegister').on('click', function () {
+    $('html, body').animate({ scrollTop: $('#register').offset().top - 80 }, 600);
+  });
+
+  /* ── Marquee ── */
+  const items = [
+    'Battle of Bands','Hackathon 2025','Cultural Night','Tech Expo','Street Food Carnival',
+    'Poetry Slam','Robotics Challenge','Stand-up Comedy','Photography Contest','Fashion Show',
+    'Open Mic Night','E-sports Tournament','Debate Championship','Flash Mob','Art Installations'
+  ];
+  let mHtml = '';
+  [...items, ...items].forEach(i => {
+    mHtml += `<div class="flex items-center gap-6 px-8 whitespace-nowrap text-[0.75rem] tracking-[0.12em] uppercase text-muted marquee-item">
+                <span class="marquee-item dot"></span>${i}
+              </div>`;
+  });
+  $('#marquee').html(mHtml);
+
+  /* ── Filter tabs styles (injected via JS since they're dynamic active states) ── */
+  $('<style>')
+    .text(`.tab{padding:8px 18px;border-radius:100px;border:1px solid #2a2a26;background:transparent;color:#8a8780;font-family:'DM Mono',monospace;font-size:.75rem;letter-spacing:.06em;cursor:none;transition:all .2s}
+           .tab.active,.tab:hover{background:#e8ff47;color:#0a0a08;border-color:#e8ff47}`)
+    .appendTo('head');
+
+  /* ── Events ── */
+  const events = [
+    { name:'Battle of the Bands', cat:'music', emoji:'🎸', color:'#1a0d2e', badge:'Live Music',  date:'Sep 19', time:'6:00 PM',  venue:'Main Stage',  desc:'Twelve college bands compete for the ultimate crown in an electrifying face-off.', price:'₹149', free:false },
+    { name:'HackCampus 2025',     cat:'tech',  emoji:'💻', color:'#0d1a0e', badge:'Hackathon',   date:'Sep 20', time:'9:00 AM',  venue:'Tech Hub',    desc:'24-hour hackathon. Build anything that matters. ₹1L in prizes.', price:'Free', free:true },
+    { name:'Brushstrokes Live',   cat:'art',   emoji:'🎨', color:'#1e1000', badge:'Art Show',    date:'Sep 19', time:'11:00 AM', venue:'Art Gallery', desc:'Live painting, digital art demos & interactive installations by 40+ artists.', price:'₹99', free:false },
+    { name:'Street Food Festival',cat:'food',  emoji:'🍜', color:'#0a1a0a', badge:'Food & Drinks',date:'All Days',time:'10:00 AM',venue:'Food Court',  desc:'50+ stalls, local flavours, live cooking battles & dessert wars.', price:'Free', free:true },
+    { name:'CodeQuest Championship',cat:'tech',emoji:'⚡', color:'#0d1a0e', badge:'Competitive', date:'Sep 21', time:'10:00 AM', venue:'CS Block',     desc:'Algorithmic battles for the fastest minds. Top 3 get internship offers.', price:'Free', free:true },
+    { name:'Inter-College Futsal', cat:'sport',emoji:'⚽', color:'#0d1520', badge:'Sports',      date:'Sep 20', time:'8:00 AM',  venue:'Sports Arena', desc:'16 colleges, one trophy. Fast-paced futsal tournament with electric crowds.', price:'₹99', free:false },
+    { name:'Unplugged Night',      cat:'music',emoji:'🎤', color:'#1a0d2e', badge:'Open Mic',    date:'Sep 21', time:'7:00 PM',  venue:'Main Stage',  desc:'Acoustic sets, spoken word and surprise celebrity guest appearances.', price:'₹199', free:false },
+    { name:'3D Printing Expo',     cat:'tech', emoji:'🖨️', color:'#0d1a0e', badge:'Exhibition',  date:'Sep 19', time:'10:00 AM', venue:'Tech Hub',    desc:'See the future being built, layer by layer. Workshops included.', price:'Free', free:true },
+    { name:'Graffiti Wall',        cat:'art',  emoji:'🖌️', color:'#1e1000', badge:'Interactive', date:'All Days',time:'9:00 AM', venue:'West Wall',   desc:'Pick up a spray can and leave your mark on a 200-foot mural canvas.', price:'Free', free:true },
+  ];
+
+  function renderEvents(filter) {
+    const filtered = filter === 'all' ? events : events.filter(e => e.cat === filter);
+    let html = '';
+    filtered.forEach((e, i) => {
+      html += `
+        <div class="event-card bg-campuscard border border-border rounded-xl overflow-hidden cursor-none"
+             style="transition-delay:${i*0.07}s" data-cat="${e.cat}">
+          <div class="h-[180px] relative overflow-hidden">
+            <div class="w-full h-full flex items-center justify-center text-[3.5rem]"
+                 style="background:${e.color}">${e.emoji}</div>
+            <div class="absolute top-3.5 left-3.5 bg-[rgba(10,10,8,0.75)] backdrop-blur-sm
+                        border border-border rounded px-2.5 py-1 text-[0.65rem]
+                        tracking-[0.08em] uppercase text-accent">${e.badge}</div>
+          </div>
+          <div class="p-5">
+            <div class="flex gap-3 mb-2.5 text-[0.68rem] text-muted tracking-[0.05em]">
+              <span class="flex items-center gap-1">📅 ${e.date}</span>
+              <span class="flex items-center gap-1">🕐 ${e.time}</span>
+              <span class="flex items-center gap-1">📍 ${e.venue}</span>
+            </div>
+            <div class="font-syne font-bold text-[1.1rem] leading-tight tracking-tight mb-2">${e.name}</div>
+            <div class="text-[0.78rem] text-muted leading-relaxed">${e.desc}</div>
+          </div>
+          <div class="flex justify-between items-center px-5 py-3.5 border-t border-border">
+            <span class="font-syne font-bold text-base ${e.free ? 'text-[#4ade80]' : 'text-accent'}">${e.price}</span>
+            <button class="btn-sm bg-transparent border border-border text-campustext
+                           px-4 py-1.5 rounded text-[0.72rem] font-mono cursor-none transition-all duration-200">
+              Register →
+            </button>
+          </div>
+        </div>`;
+    });
+    $('#eventsGrid').html(html);
+    setTimeout(() => {
+      $('.event-card').each(function(i) {
+        setTimeout(() => $(this).addClass('visible'), i * 80);
+      });
+    }, 50);
+  }
+  renderEvents('all');
+
+  $('#filterTabs').on('click', '.tab', function () {
+    $('.tab').removeClass('active');
+    $(this).addClass('active');
+    renderEvents($(this).data('filter'));
+  });
+
+  /* ── Timeline ── */
+  const schedule = {
+    'Day 1 — Sep 19': [
+      { time:'09:00', name:'Inauguration Ceremony',   loc:'Main Stage',   tag:'tag-art' },
+      { time:'11:00', name:'Brushstrokes Live Art Show',loc:'Art Gallery', tag:'tag-art' },
+      { time:'14:00', name:'3D Printing Expo Launch',  loc:'Tech Hub',    tag:'tag-tech' },
+      { time:'16:00', name:'Cultural Dance Showcase',  loc:'Amphitheatre',tag:'tag-art' },
+      { time:'18:00', name:'Battle of the Bands',      loc:'Main Stage',  tag:'tag-music' },
+    ],
+    'Day 2 — Sep 20': [
+      { time:'08:00', name:'Inter-College Futsal Begins',   loc:'Sports Arena',tag:'tag-sport' },
+      { time:'09:00', name:'HackCampus 2025 Kickoff',       loc:'Tech Hub',    tag:'tag-tech' },
+      { time:'12:00', name:'Street Food Festival Peak Hours',loc:'Food Court',  tag:'tag-food' },
+      { time:'15:00', name:'Robotics Demo & Workshop',       loc:'Tech Hub',    tag:'tag-tech' },
+      { time:'19:00', name:'DJ Night & Light Show',          loc:'Main Stage',  tag:'tag-music' },
+    ],
+    'Day 3 — Sep 21': [
+      { time:'10:00', name:'CodeQuest Championship Finals', loc:'CS Block',    tag:'tag-tech' },
+      { time:'12:00', name:'HackCampus Presentations',      loc:'Auditorium',  tag:'tag-tech' },
+      { time:'14:00', name:"Inter-College Finals — Futsal", loc:'Sports Arena',tag:'tag-sport' },
+      { time:'17:00', name:"Winners' Ceremony",             loc:'Main Stage',  tag:'tag-art' },
+      { time:'19:00', name:'Unplugged Night & Closing',     loc:'Main Stage',  tag:'tag-music' },
+    ]
+  };
+
+  const tagLabels = { 'tag-music':'Music','tag-tech':'Tech','tag-art':'Culture','tag-food':'Food','tag-sport':'Sports' };
+  let tlHtml = '';
+  Object.entries(schedule).forEach(([day, items]) => {
+    tlHtml += `<div class="mb-12"><div class="day-label">${day}</div>`;
+    items.forEach(item => {
+      tlHtml += `
+        <div class="timeline-item flex gap-6 pl-7 mb-5 cursor-none transition-transform duration-200">
+          <div class="t-time text-[0.72rem] text-muted whitespace-nowrap pt-[3px] min-w-[64px]">${item.time}</div>
+          <div class="t-content bg-campuscard border border-border rounded-lg px-[18px] py-3.5 flex-1 transition-colors duration-200">
+            <div class="t-name">${item.name}</div>
+            <div class="t-loc">📍 ${item.loc}</div>
+            <span class="t-tag ${item.tag}">${tagLabels[item.tag]}</span>
+          </div>
+        </div>`;
+    });
+    tlHtml += '</div>';
+  });
+  $('#timeline').html(tlHtml);
+
+  /* ── Speakers ── */
+  const speakers = [
+    { name:'Dr. Priya Nair',  role:'CTO, TechMorph',            topic:'Future of AI in Education',        emoji:'👩‍💻', bg:'#1a1030' },
+    { name:'Arjun Mehta',     role:'Founder, StartupX',          topic:'Zero to Series A',                 emoji:'🚀',  bg:'#0d1a0e' },
+    { name:'Zara Khan',       role:'Award-winning Artist',        topic:'Digital Art Meets Street Culture', emoji:'🎨',  bg:'#1e1000' },
+    { name:'Vikram Rao',      role:'Olympic Medallist',           topic:'Champion Mindset',                 emoji:'🏅',  bg:'#0d1520' },
+    { name:'Sofia Alvarez',   role:'Principal Engineer, Meta',    topic:'Building at Scale',                emoji:'⚡',  bg:'#0d1a1a' },
+    { name:'Rohan Das',       role:'Grammy-nominated DJ',         topic:'Music & Technology Collide',       emoji:'🎵',  bg:'#1a0d2e' },
+    { name:'Dr. Ananya Singh',role:'Climate Researcher',          topic:'Tech for the Planet',              emoji:'🌱',  bg:'#0d1a0e' },
+    { name:'Kabir Joshi',     role:'National Stand-up Comedian',  topic:'The Science of Laughter',          emoji:'😂',  bg:'#1a1000' },
+  ];
+
+  let spHtml = '';
+  speakers.forEach((s, i) => {
+    spHtml += `
+      <div class="speaker-card bg-campuscard border border-border rounded-xl px-5 py-7 text-center cursor-none"
+           style="transition-delay:${i*0.07}s">
+        <div class="w-[72px] h-[72px] rounded-full mx-auto mb-4 flex items-center justify-center text-[1.8rem] border-2 border-border"
+             style="background:${s.bg}">${s.emoji}</div>
+        <div class="speaker-name">${s.name}</div>
+        <div class="speaker-role">${s.role}</div>
+        <div class="mt-3.5 text-[0.7rem] text-accent tracking-[0.05em] bg-[rgba(232,255,71,0.07)] rounded px-2.5 py-1.5">${s.topic}</div>
+      </div>`;
+  });
+  $('#speakersGrid').html(spHtml);
+
+  /* ── Intersection Observer ── */
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) $(entry.target).addClass('visible');
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.speaker-card, .event-card').forEach(el => obs.observe(el));
+
+  /* ── Counters ── */
+  function animateCounters() {
+    $('[data-target]').each(function () {
+      const $el = $(this).find('span');
+      const target = parseInt($(this).data('target'));
+      $({ val: 0 }).animate({ val: target }, {
+        duration: 1800, easing: 'swing',
+        step: function () { $el.text(Math.floor(this.val).toLocaleString()); },
+        complete: function () { $el.text(target.toLocaleString()); }
+      });
+    });
+  }
+  let countersStarted = false;
+  $(window).on('scroll', function () {
+    if (!countersStarted && $(window).scrollTop() < 400) return;
+    if (!countersStarted) { animateCounters(); countersStarted = true; }
+  });
+  setTimeout(animateCounters, 1200);
+
+  /* ── Smooth scroll to register ── */
+  $('#heroRegister, #navRegister').on('click', function () {
+    $('html, body').animate({ scrollTop: $('#register').offset().top - 80 }, 600);
+  });
+
+  /* ── Event register toast ── */
+  $(document).on('click', '.btn-sm', function () { showToast('Added to your list! 🎉'); });
+
+  /* ── Form submit ── */
+  $('#formSubmit').on('click', function () {
+    const fname = $('#fname').val().trim();
+    const email = $('#email').val().trim();
+    const pass  = $('#passType').val();
+    if (!fname || !email || !pass) { showToast('Please fill all required fields 🙏'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Enter a valid email address 📧'); return; }
+    $('#regForm').fadeOut(300, function () {
+      $('#successMsg').fadeIn(400);
+      showToast('Registration successful! 🎟️');
+    });
+  });
+
+  function showToast(msg) {
+    $('#toast').text(msg).addClass('show');
+    setTimeout(() => $('#toast').removeClass('show'), 3000);
+  }
+
+  /* ── Parallax orbs ── */
+  $(window).on('mousemove', function (e) {
+    const cx = e.clientX / window.innerWidth - 0.5;
+    const cy = e.clientY / window.innerHeight - 0.5;
+    $('.orb1').css('transform', `translate(${cx * -30}px, ${cy * -30}px)`);
+    $('.orb2').css('transform', `translate(${cx *  20}px, ${cy *  20}px)`);
+    $('.orb3').css('transform', `translate(${cx *  40}px, ${cy * -20}px)`);
+  });
+
+});
+</script>
+</body>
+</html>
